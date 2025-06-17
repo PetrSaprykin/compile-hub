@@ -1,0 +1,43 @@
+:root {
+  --primary: #3e9e11;
+  --primary-hover: #4bc014;
+  --bg-color: #13151b;
+  --bg-secondary: #3a3c43;
+  --bg-error: #ff2020;
+  --text-color: #eeeeee;
+  --text-secondary: rgba(255, 255, 255, 0.56);
+  --text-error: #ff2020;
+  --border-color: #3a3c43;
+  --border-radius: 8px;
+  --border-error-color: #ff2020;
+
+  --shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.25);
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 15px;
+  --spacing-xl: 25px;
+
+  --font-main:
+    "Inter", -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu,
+    Cantarell, sans-serif;
+  --font-size-sm: 12px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+
+  --icon-size-sm: 18px;
+  --icon-size-md: 22px;
+  --icon-size-lg: 24px;
+
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+}
+
+[data-theme="light"] {
+  --bg-color: rgba(255, 255, 255, 1);
+  --bg-secondary: rgba(249, 250, 251, 1);
+  --text-color: rgba(17, 24, 39, 1);
+  --border-color: rgba(217, 217, 217, 1);
+}
