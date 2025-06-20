@@ -2,7 +2,7 @@ import { useModalStore } from "@/store/modalStore"
 import { Button } from "@/components/ui/Button"
 import { Logo } from "@/components/ui/Logo"
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher"
-import { ErrorModal } from "@/components/ui/Modal"
+import { AuthModal } from "@/components/ui/Modal"
 import styles from "./Header.module.css"
 
 export default function Header() {
@@ -18,19 +18,16 @@ export default function Header() {
           <ThemeSwitcher className={styles.themeSwitcher} />
           <Button
             variant='secondary'
-            onClick={() =>
-              openModal(
-                <ErrorModal
-                  title='Ooops, something went wrong'
-                  message='Cannot delete file, file with this name already exists'
-                />,
-                "error"
-              )
-            }
+            onClick={() => openModal(<AuthModal />, "auth")}
           >
             Log In
           </Button>
-          <Button variant='primary'>Sign In</Button>
+          <Button
+            variant='primary'
+            onClick={() => openModal(<AuthModal isReg={true} />, "auth")}
+          >
+            Sign Up
+          </Button>
         </div>
       </div>
     </header>

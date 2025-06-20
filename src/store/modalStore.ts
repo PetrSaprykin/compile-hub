@@ -1,17 +1,28 @@
-import { create } from 'zustand';
+import { create } from "zustand"
 
 type ModalStore = {
-  isOpen: boolean;
-  content: React.ReactNode | null;
-  extraClass?: string;
-  openModal: (content: React.ReactNode, extraClass: string) => void;
-  closeModal: () => void;
-};
+  isOpen: boolean
+  isLocked: boolean
+  content: React.ReactNode | null
+  extraClass?: string
+  openModal: (content: React.ReactNode, extraClass: string) => void
+  setIsLocked: (state: boolean) => void
+  closeModal: () => void
+}
 
-export const useModalStore = create<ModalStore>((set) => ({
+export const useModalStore = create<ModalStore>((set, get) => ({
   isOpen: false,
+  isLocked: false,
   content: null,
   extraClass: "",
-  openModal: (content, extraClassName) => set({ isOpen: true, content, extraClass: extraClassName }),
-  closeModal: () => set({ isOpen: false, content: null, extraClass: "" }),
-}));
+  openModal: (content, extraClassName) =>
+    set({ isOpen: true, content: content, extraClass: extraClassName }),
+  setIsLocked: (state) => {
+    set({ isLocked: state })
+  },
+  closeModal: () => {
+    if (!get().isLocked) {
+      set({ isOpen: false, content: null, extraClass: "", isLocked: false })
+    }
+  }
+}))

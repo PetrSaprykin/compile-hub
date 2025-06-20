@@ -1,42 +1,58 @@
 import styles from "./Modal.module.css"
 import { useModalStore } from "@/store/modalStore"
-import { useEffect, useRef } from "react"
+import { useRef, useEffect } from "react"
 
 export const Modal = () => {
-  const { isOpen, content, extraClass, closeModal } = useModalStore()
-  const dialogRef = useRef<HTMLDialogElement>(null)
+  const { isOpen, isLocked, content, extraClass, closeModal } = useModalStore()
+  const modalRef = useRef<HTMLDivElement>(null)
 
+  const mouseDownTarget = useRef<EventTarget | null>(null)
+
+  // обработчик Esc
   useEffect(() => {
-    const dialog = dialogRef.current
-    if (!dialog) return
+    if (!isOpen) return
 
-    if (isOpen) {
-      dialog.showModal()
-    } else {
-      dialog.close()
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !isLocked) {
+        closeModal()
+      }
     }
-  }, [isOpen])
+
+    document.addEventListener("keydown", handleKeyDown)
+    return () => document.removeEventListener("keydown", handleKeyDown)
+  }, [isOpen, isLocked, closeModal])
+
+  /*
+    событие нажатие юзаем чтобы пофиксить баг, при котором при 
+    зажатии лкм на окне, переведении курсора на бэкдроп и отпускании 
+    мыши окно закрывалось 
+  */
+  const handleMouseDown = (e: React.MouseEvent) => {
+    mouseDownTarget.current = e.target
+  }
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (
+      e.target === modalRef.current &&
+      mouseDownTarget.current === modalRef.current &&
+      !isLocked
+    ) {
+      closeModal()
+    }
+
+    mouseDownTarget.current = null
+  }
 
   if (!isOpen || !content) return null
 
-  let modalClasses = styles.modal
-
-  if (extraClass) {
-    modalClasses = [styles.modal, styles[extraClass]].join(" ").trim()
-  }
-
   return (
-    <dialog
-      ref={dialogRef}
-      className={modalClasses}
-      onClose={closeModal}
-      onClick={(e) => {
-        if (e.target === dialogRef.current) {
-          closeModal()
-        }
-      }}
+    <div
+      ref={modalRef}
+      className={`${styles.modal} ${extraClass ? styles[extraClass] : ""}`}
+      onMouseDown={handleMouseDown}
+      onClick={handleBackdropClick}
     >
-      {content}
-    </dialog>
+      <div className={styles.content}>{content}</div>
+    </div>
   )
 }

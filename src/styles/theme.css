@@ -5,8 +5,9 @@
   --bg-secondary: #3a3c43;
   --bg-error: #ff2020;
   --text-color: #eeeeee;
-  --text-secondary: rgba(255, 255, 255, 0.56);
+  --text-secondary: rgb(117, 117, 117);
   --text-error: #ff2020;
+  --text-success: #3e9e11;
   --border-color: #3a3c43;
   --border-radius: 8px;
   --border-error-color: #ff2020;
@@ -31,8 +32,7 @@
   --icon-size-md: 22px;
   --icon-size-lg: 24px;
 
-  --transition-fast: 150ms ease;
-  --transition-normal: 300ms ease;
+  --transition-normal: 150ms ease;
 }
 
 [data-theme="light"] {

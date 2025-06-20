@@ -1,11 +1,20 @@
 .button {
   height: 42px;
-  padding: var(--spacing-sm) var(--spacing-xl);
+  padding: 0 var(--spacing-xl);
   border-radius: var(--border-radius);
   border: 2px solid var(--border-color);
   color: var(--text-color);
   transition: var(--transition-normal);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button:disabled {
+  color: var(--bg-secondary);
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .primary {

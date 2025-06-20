@@ -1,0 +1,87 @@
+.inputContainer {
+  width: 100%;
+  position: relative;
+  margin-bottom: var(--spacing-sm);
+}
+
+.hasNote {
+  margin-bottom: 0px;
+}
+
+.inputLine {
+  display: flex;
+  flex-direction: row !important;
+  flex-wrap: nowrap;
+  height: 35px;
+  position: relative;
+}
+
+.inputLine svg {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 6px;
+  left: 5px;
+}
+
+.inputLine input {
+  border: 1px solid var(--border-color);
+  outline: none;
+  background-color: inherit;
+  border-radius: var(--border-radius);
+  width: 100%;
+  height: 100%;
+  padding-left: 32px;
+  color: var(--text-color);
+  padding-right: var(--spacing-md);
+}
+
+.isValidating {
+  padding-right: 30px;
+}
+.isPassword {
+  padding-right: 40px !important;
+}
+
+.spinner {
+  position: absolute;
+  width: 20px !important;
+  height: 20px !important;
+  top: 8px !important;
+  left: unset !important;
+  right: 5px;
+  animation: spin 0.5s linear infinite;
+}
+
+.showPass {
+  position: absolute;
+  width: 22px !important;
+  height: 22px !important;
+  top: 6px !important;
+  left: unset !important;
+  right: 8px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+p {
+  margin-left: 3px;
+  font-size: var(--font-size-sm);
+}
+
+.errorNote {
+  color: var(--text-error);
+}
+
+.successNote {
+  color: var(--text-success);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
