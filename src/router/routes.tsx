@@ -1,6 +1,7 @@
 // src/router/routes.ts
-import MainPage from '@/pages/MainPage'
-import NotFoundPage from '@/pages/NotFoundPage'
+import MainPage from "@/pages/MainPage"
+import NotFoundPage from "@/pages/NotFoundPage"
+import ResetPasswordPage from "@/pages/ResetPasswordPage"
 
 // Типизация для маршрутов
 export interface RouteConfig {
@@ -11,10 +12,8 @@ export interface RouteConfig {
 
 // Константы путей для удобства использования
 export const ROUTES = {
-  MAIN: '/',
-  // Другие маршруты в будущем
-  // ABOUT: '/about',
-  // PROFILE: '/profile',
+  MAIN: "/",
+  PASSWORD_RESET: "/password-reset"
 }
 
 // Конфигурация маршрутов
@@ -22,12 +21,18 @@ export const routeConfig: RouteConfig[] = [
   {
     path: ROUTES.MAIN,
     element: <MainPage />,
-    title: 'Главная',
+    title: "Главная"
   },
   // Маршрут 404 для обработки несуществующих URL
   {
-    path: '*',
+    path: "*",
     element: <NotFoundPage />,
-    title: 'Страница не найдена',
+    title: "Страница не найдена"
   },
+  // маршрут для сброса пароля
+  {
+    path: ROUTES.PASSWORD_RESET,
+    element: <ResetPasswordPage />,
+    title: "Страница не найдена"
+  }
 ]

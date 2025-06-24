@@ -1,3 +1,3 @@
-export { Modal } from './Modal'
-export { ErrorModal } from './ErrorModal'
-export { AuthModal } from './AuthModal'
+export { Modal } from "./Modal"
+export { ErrorModal } from "./ErrorModal/ErrorModal"
+export { AuthModal } from "./AuthModal/AuthModal"

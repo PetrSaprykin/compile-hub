@@ -37,7 +37,7 @@ export const Input: React.FC<InputProps> = ({
   )
   return (
     <div
-      className={`${styles.inputContainer} ${message?.text ? styles.hasNote : ""} `}
+      className={`${styles.inputContainer} ${message?.text ? styles.hasNote : ""} ${props.className}`}
     >
       <div className={styles.inputLine}>
         {icon}

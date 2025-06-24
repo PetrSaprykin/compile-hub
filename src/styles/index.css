@@ -17,10 +17,15 @@ body {
 
 #root {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
 }
 .app {
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .content {
@@ -57,28 +62,47 @@ h4 {
 
 a {
   text-decoration: none;
-
-  &.link {
-    text-decoration: underline;
-    color: var(--primary);
-
-    &:hover {
-      color: var(--primary-hover);
-    }
-  }
+  color: var(--text-color);
+  transition: var(--transition-normal);
 }
 
-/* Отключаем стандартные стили автозаполнения */
+a:hover {
+  color: var(--text-color);
+}
+
+.link {
+  position: relative;
+}
+
+.link::after {
+  position: absolute;
+  content: "";
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--text-color);
+}
+
+.link::after {
+  width: 0;
+  transition: 0.3s;
+}
+.link:hover:after {
+  width: 100%;
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-text-fill-color: var(--text-color) !important;
   caret-color: var(--text-color) !important;
-  transition: background-color 5000s ease-in-out 0s; /* выставляется желаемая задержка */
+  transition: background-color 5000s ease-in-out 0s;
 }
 
-/* Для Firefox */
 input:-moz-autofill,
 input:-moz-autofill:hover,
 input:-moz-autofill:focus {

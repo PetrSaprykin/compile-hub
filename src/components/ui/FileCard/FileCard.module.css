@@ -1,0 +1,40 @@
+.fileCard {
+  position: relative;
+  width: 100%;
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-sm);
+  transition: var(--transition-normal);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.fileCard:hover {
+  background-color: var(--bg-secondary);
+}
+
+.fileCard > span {
+  font-size: calc(var(--font-size-md) + 2px);
+  transition: var(--transition-normal);
+  font-weight: 400;
+  margin-left: 5px;
+}
+
+.fileCard svg {
+  cursor: pointer;
+  transition: var(--transition-normal);
+  margin-left: -5px;
+}
+
+.options {
+  position: absolute;
+  right: -4px;
+}
+.options:hover {
+  color: var(--primary);
+}
+
+
+

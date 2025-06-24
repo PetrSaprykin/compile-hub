@@ -1,12 +1,16 @@
-import { MdLockOutline, MdMailOutline, MdPersonOutline } from "react-icons/md"
-import { CgSpinner } from "react-icons/cg"
+import { useEffect, useMemo, useState } from "react"
+import { Link } from "react-router-dom"
+import { ROUTES } from "@/router/routes"
+
+import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
+import { Logo } from "@/components/ui/Logo"
 import { useAuthStore } from "@/store/authStore"
 import { useModalStore } from "@/store/modalStore"
-import { Input } from "@/components/ui/Input"
-import { Button } from "@/components/ui/Button"
-import { Logo } from "@/components/ui/Logo"
-import styles from "./Modal.module.css"
-import { useState, useEffect, useMemo } from "react"
+import { CgSpinner } from "react-icons/cg"
+import { MdLockOutline, MdMailOutline, MdPersonOutline } from "react-icons/md"
+
+import styles from "./AuthModal.module.css"
 
 interface AuthModalProps {
   className?: string
@@ -45,7 +49,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isReg = false }) => {
     isValid
   } = useAuthStore()
 
-  const { setIsLocked } = useModalStore()
+  const { setIsLocked, closeModal } = useModalStore()
 
   const hidePassTrigger = useMemo(
     () => [mode, isLoading, password],
@@ -108,13 +112,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isReg = false }) => {
   }
 
   return (
-    <>
+    <div className={styles.content}>
       <Logo variant='compact' />
       <h3 style={{ fontWeight: 400 }}>Welcome to CompileHub!</h3>
       <div className={styles.authForm}>
         <Input
           type='text'
-          className={errors.username.isAvialable ? "success" : "error"}
+          className={`${errors.username.isAvialable ? "success" : "error"} ${styles.input}`}
           isRequired={true}
           isValidating={isValidating}
           icon={<MdPersonOutline />}
@@ -133,6 +137,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isReg = false }) => {
         {mode === "register" && (
           <Input
             type='email'
+            className={styles.input}
             isRequired={true}
             icon={<MdMailOutline />}
             placeholder='Enter email'
@@ -146,6 +151,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isReg = false }) => {
 
         <Input
           type='password'
+          className={styles.input}
           isRequired={true}
           icon={<MdLockOutline />}
           placeholder='Enter password'
@@ -159,6 +165,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isReg = false }) => {
         {mode === "register" && (
           <Input
             type='password'
+            className={styles.input}
             isRequired={true}
             icon={<MdLockOutline />}
             placeholder='Confirm password'
@@ -219,6 +226,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isReg = false }) => {
           )}
         </Button>
       </div>
-    </>
+      <Link
+        to={ROUTES.PASSWORD_RESET}
+        className={`link ${styles.forgotPassword}`}
+        onClick={closeModal}
+      >
+        Forgot password? Click here
+      </Link>
+    </div>
   )
 }

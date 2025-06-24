@@ -21,7 +21,7 @@
   background-color: var(--primary);
 }
 .primary:hover {
-  background-color: var(--primary-hover);
+  border-color: var(--text-color);
 }
 
 .secondary {
@@ -29,7 +29,6 @@
   color: var(--text-color);
 }
 .secondary:hover {
-  background-color: var(--primary);
   background-color: var(--bg-color);
   border-color: var(--text-color);
 }

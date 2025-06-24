@@ -1,12 +1,9 @@
 import styles from "./MainPage.module.css"
-
+import { Filebar } from "@/components/common/Filebar/Filebar"
 export default function MainPage() {
   return (
     <main className={styles.main}>
-      {/* <ErrorModal
-        title='Ooops, something went wrong'
-        message='Cannot delete file, file with this name already exists'
-      /> */}
+      <Filebar />
     </main>
   )
 }

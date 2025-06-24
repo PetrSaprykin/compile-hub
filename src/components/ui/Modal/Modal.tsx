@@ -3,7 +3,7 @@ import { useModalStore } from "@/store/modalStore"
 import { useRef, useEffect } from "react"
 
 export const Modal = () => {
-  const { isOpen, isLocked, content, extraClass, closeModal } = useModalStore()
+  const { isOpen, isLocked, content, closeModal } = useModalStore()
   const modalRef = useRef<HTMLDivElement>(null)
 
   const mouseDownTarget = useRef<EventTarget | null>(null)
@@ -48,11 +48,11 @@ export const Modal = () => {
   return (
     <div
       ref={modalRef}
-      className={`${styles.modal} ${extraClass ? styles[extraClass] : ""}`}
+      className={styles.modal}
       onMouseDown={handleMouseDown}
       onClick={handleBackdropClick}
     >
-      <div className={styles.content}>{content}</div>
+      {content}
     </div>
   )
 }

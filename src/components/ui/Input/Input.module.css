@@ -1,11 +1,10 @@
 .inputContainer {
   width: 100%;
   position: relative;
-  margin-bottom: var(--spacing-sm);
 }
 
 .hasNote {
-  margin-bottom: 0px;
+  margin-bottom: 0px !important;
 }
 
 .inputLine {

@@ -1,6 +1,6 @@
 import { useModalStore } from "@/store/modalStore"
-
-import { Button } from "../Button"
+import styles from "./ErrorModal.module.css"
+import { Button } from "@/components/ui/Button"
 
 interface ErrorModalProps {
   title: string
@@ -14,12 +14,12 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({
 }) => {
   const { closeModal } = useModalStore()
   return (
-    <>
-      <h3>{title}</h3>
+    <div className={styles.content}>
+      <h2>{title}</h2>
       <p>{message}</p>
       <Button variant='secondary' onClick={closeModal}>
         OK
       </Button>
-    </>
+    </div>
   )
 }

@@ -16,15 +16,14 @@ export default function Header() {
         </a>
         <div className={styles.headerButtons}>
           <ThemeSwitcher className={styles.themeSwitcher} />
-          <Button
-            variant='secondary'
-            onClick={() => openModal(<AuthModal />, "auth")}
-          >
+          <Button variant='secondary' onClick={() => openModal(<AuthModal />)}>
             Log In
           </Button>
           <Button
             variant='primary'
-            onClick={() => openModal(<AuthModal isReg={true} />, "auth")}
+            onClick={() =>
+              openModal(<AuthModal isReg={true} className='auth' />)
+            }
           >
             Sign Up
           </Button>

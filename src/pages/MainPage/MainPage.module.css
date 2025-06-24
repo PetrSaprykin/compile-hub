@@ -1,11 +1,3 @@
-.testModal {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.buttonGroup {
-  display: flex;
-  gap: var(--spacing-lg);
+.main {
+  height: calc(100% - 60px);
 }
