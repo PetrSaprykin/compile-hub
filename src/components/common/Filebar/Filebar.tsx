@@ -2,8 +2,7 @@ import { useModalStore } from "@/store/modalStore"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import styles from "./Filebar.module.css"
-import { FileCard } from "@/components/ui/FileCard"
-import { FolderCard } from "@/components/ui/FolderCard"
+import { FileItem } from "@/components/ui/FileItem"
 import { MdSearch } from "react-icons/md"
 
 export const Filebar = () => {
@@ -19,11 +18,30 @@ export const Filebar = () => {
         />
         <hr />
         <div className={styles.fileList}>
-          <FolderCard />
-          <FileCard />
-          <FileCard />
-          <FileCard />
-          <FileCard />
+          <div className={styles.fileListContainer}></div>
+          <FileItem
+            name='script.js'
+            type='folder'
+            size='3mb'
+            modified='3 days ago'
+          />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
+          <FileItem name='script.js' type='file' />
         </div>
         <hr />
         <div className={styles.buttons}>

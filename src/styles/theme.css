@@ -8,6 +8,8 @@
   --text-secondary: rgb(117, 117, 117);
   --text-error: #ff2020;
   --text-success: #3e9e11;
+  --menu-item-hover: rgba(74, 192, 20, 0.3);
+  --menu-item-hover-danger: rgba(255, 32, 32, 0.3);
   --border-color: #3a3c43;
   --border-color-error: #ff2020;
   --border-radius: 8px;

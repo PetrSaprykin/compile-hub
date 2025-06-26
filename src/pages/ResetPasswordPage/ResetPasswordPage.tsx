@@ -41,9 +41,9 @@ export default function ResetPasswordPage() {
         setEmail("")
         openModal(
           <ErrorModal
-            title={"Превышен лимит запросов"}
+            title={"Ooops, you've reached the limit"}
             message={
-              "Превышен лимит запросов на восстановление пароля, пожалуйста, попробуйте позже"
+              "You've reached the limit of password resets, please try again later"
             }
           />
         )
@@ -60,13 +60,13 @@ export default function ResetPasswordPage() {
           </h1>
         ) : (
           <>
-            <h2>Восстановление доступа к учётной записи</h2>
+            <h2>Recovering access to your account</h2>
             <div className={styles.inputGroup}>
               <Input
                 type='email'
                 icon={<MdMailOutline />}
                 className={styles.inputContainer}
-                placeholder='Введите ваш адрес электронной почты'
+                placeholder="Enter your account's email"
                 message={message}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -74,7 +74,7 @@ export default function ResetPasswordPage() {
                   if (e.key === "Enter") handleSubmit()
                 }}
               />
-              <Button onClick={handleSubmit}>Отправить письмо</Button>
+              <Button onClick={handleSubmit}>Send link to reset</Button>
             </div>
           </>
         )}
