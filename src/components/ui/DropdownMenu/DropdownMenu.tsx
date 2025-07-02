@@ -21,6 +21,9 @@ interface DropdownMenuProps {
   disabled?: boolean
   align?: "left" | "right" | "center"
   size?: "sm" | "md" | "lg"
+  onOpenChange?: (isDropdownOpen: boolean) => void
+  onClick?: (e: React.MouseEvent) => void
+  isOpen?: boolean
 }
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -29,12 +32,17 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   className = "",
   disabled = false,
   align = "right",
-  size = "md"
+  size = "md",
+  onOpenChange
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const triggerRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    onOpenChange?.(isOpen)
+  }, [isOpen])
 
   // вычисляем позицию меню относительно триггера
   const calculatePosition = () => {
@@ -89,14 +97,8 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
     }
   }
 
-  // Пересчитываем позицию при скролле
+  // пересчитываем позицию при скролле
   useEffect(() => {
-    const handleScroll = () => {
-      if (isOpen) {
-        calculatePosition()
-      }
-    }
-
     const handleResize = () => {
       if (isOpen) {
         calculatePosition()
@@ -104,17 +106,15 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
     }
 
     if (isOpen) {
-      window.addEventListener("scroll", handleScroll, true)
       window.addEventListener("resize", handleResize)
 
       return () => {
-        window.removeEventListener("scroll", handleScroll, true)
         window.removeEventListener("resize", handleResize)
       }
     }
   }, [isOpen])
 
-  // Закрытие при клике вне компонента
+  // закрытие при клике вне компонента
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -170,26 +170,16 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
   const defaultTrigger = <IoEllipsisHorizontalCircle size={getTriggerSize()} />
 
-  // Меню в портале
+  // меню в портале
   const menu = isOpen ? (
     <div
       ref={menuRef}
       className={styles.portalMenu}
       style={{
-        position: "fixed",
         left: position.x,
-        top: position.y,
-        zIndex: 9999,
-        background: "var(--bg-color)",
-        boxShadow: "var(--shadow)",
-        border: "1px solid var(--border-color)",
-        borderRadius: "8px",
-        width: "180px",
-        padding: "4px 0",
-        animation: "slideIn 0.15s ease-out"
+        top: position.y
       }}
       role='menu'
-      aria-orientation='vertical'
     >
       {items.map((item, index) => (
         <React.Fragment key={item.id || index}>
@@ -219,14 +209,10 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
         className={`${styles.trigger} ${disabled ? styles.disabled : ""} ${className}`}
         onClick={handleToggle}
         disabled={disabled}
-        aria-expanded={isOpen}
-        aria-haspopup='menu'
-        aria-label='Открыть меню действий'
       >
         {trigger || defaultTrigger}
       </button>
 
-      {/* Рендерим меню в портал - это решает проблему с overflow */}
       {menu && createPortal(menu, document.body)}
     </>
   )

@@ -10,11 +10,11 @@
   --text-success: #3e9e11;
   --menu-item-hover: rgba(74, 192, 20, 0.3);
   --menu-item-hover-danger: rgba(255, 32, 32, 0.3);
-  --border-color: #3a3c43;
+  --border-color: #434449;
   --border-color-error: #ff2020;
   --border-radius: 8px;
 
-  --shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.25);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 4px 6px rgba(0, 0, 0, 0.06);
 
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -41,5 +41,5 @@
   --bg-color: rgba(255, 255, 255, 1);
   --bg-secondary: rgba(249, 250, 251, 1);
   --text-color: rgba(17, 24, 39, 1);
-  --border-color: rgba(217, 217, 217, 1);
+  --border-color: rgb(199, 197, 197);
 }

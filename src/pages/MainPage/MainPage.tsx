@@ -4,6 +4,9 @@ export default function MainPage() {
   return (
     <main className={styles.main}>
       <Filebar />
+      <div className={styles.editorContainer}>
+        <div className={styles.stub}></div>
+      </div>
     </main>
   )
 }

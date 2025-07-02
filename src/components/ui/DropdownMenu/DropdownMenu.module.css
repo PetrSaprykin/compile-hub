@@ -24,17 +24,16 @@
   cursor: not-allowed;
 }
 
-/* Контент меню */
-.content {
-  position: absolute;
-  top: calc(100% - 11px);
+.portalMenu {
+  position: fixed;
   background: var(--bg-color);
   box-shadow: var(--shadow);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   width: 180px;
   padding: 4px 0;
-  z-index: 1000;
+  animation: slideIn 0.15s ease-out;
+  z-index: 9999;
 }
 
 /* выравнивание меню */
@@ -51,7 +50,7 @@
   left: 16px;
 }
 
-/* Пункты меню */
+/* пункты меню */
 .item {
   display: flex;
   align-items: center;
@@ -89,7 +88,7 @@
   background-color: var(--menu-item-hover-danger);
 }
 
-/* Иконки и лейблы */
+/* иконки и лейблы */
 .icon {
   margin-right: 8px;
   width: 16px;
@@ -115,12 +114,14 @@
 }
 
 /* Адаптивность */
-/* @media (max-width: 768px) {
-  .content {
-    min-width: 160px;
-    max-width: calc(100vw - 32px);
+@media (max-width: 768px) {
+  .portalMenu {
+    width: 160px;
   }
-
+  /* .item {
+    font-size: var(--font-size-sm);
+  } */
+  /* 
   .alignRight {
     right: auto;
     left: 0;
@@ -129,5 +130,5 @@
   .alignCenter {
     left: 0;
     transform: none;
-  }
-} */
+  } */
+}

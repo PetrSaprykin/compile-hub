@@ -1,68 +1,105 @@
-// src/components/FileExplorer/FileItem.tsx
+// Обновленный FileItem с использованием useFileActions
+
 import React from "react"
 import {
   DropdownMenu,
   type MenuItem
 } from "@/components/ui/DropdownMenu/DropdownMenu"
+import { useFileActions } from "@/hooks/useFileActions"
 import styles from "./FileItem.module.css"
 
 interface FileItemProps {
+  id: number
   name: string
   type: "file" | "folder"
+  folder?: number | null
   size?: string
   modified?: string
   className?: string
+  fileListRef?: React.RefObject<HTMLDivElement>
+  onClick?: () => void
+
+  // Drag & drop пропсы
+  isSelected?: boolean
+  isDragMode?: boolean
+  canDropHere?: boolean
+  onSelectForMove?: () => void
+  onDropHere?: () => void
 }
 
 export const FileItem: React.FC<FileItemProps> = ({
+  id,
   name,
   type,
+  folder,
   size,
   modified,
-  className = ""
+  className = "",
+  onClick,
+  isSelected = false,
+  isDragMode = false,
+  canDropHere = false,
+  onSelectForMove,
+  onDropHere
 }) => {
-  const handleAction = (action: string) => {
-    console.log(`${action} для ${type}: ${name}`)
-    // Здесь ваша логика для каждого действия
+  // Инициализируем хук действий
+  const {
+    handleRename,
+    handleDelete,
+    handleDownload,
+    handleMove,
+    handleShowInfo
+  } = useFileActions({
+    onMove: () => onSelectForMove?.(),
+    showNotification: (message, type) => {
+      console.log(`${type.toUpperCase()}: ${message}`)
+      // TODO: Здесь можно добавить настоящие уведомления
+    }
+  })
+
+  const currentFile = { id, name, size, modified, type, folder }
+
+  const handleClick = (): void => {
+    if (isDragMode && canDropHere) {
+      onDropHere?.()
+    } else if (!isDragMode) {
+      onClick?.()
+    }
   }
 
+  // Генерируем меню на основе типа файла
   const getMenuItems = (): MenuItem[] => {
-    const items: MenuItem[] = [
-      {
-        id: "copy",
-        label: "Копировать",
-        icon: "📋",
-        onClick: () => handleAction("copy")
-      },
+    if (isDragMode) return []
+
+    const menuItems: MenuItem[] = [
       {
         id: "rename",
         label: "Переименовать",
         icon: "✏️",
-        onClick: () => handleAction("rename"),
-        separator: false, // явно добавил т.к иначе ts почему-то ругается на отсутствие этих пропсов в items.push
-        destructive: false // явно добавил т.к иначе ts почему-то ругается на отсутствие этих пропсов в items.push
+        onClick: () => handleRename(currentFile)
       }
     ]
 
-    // Для файлов добавляем дополнительные опции
+    // Действия только для файлов
     if (type === "file") {
-      items.push(
+      menuItems.push(
         {
           id: "download",
           label: "Скачать",
           icon: "⬇️",
-          onClick: () => handleAction("download")
+          onClick: () => handleDownload(currentFile)
         },
         {
-          id: "share",
-          label: "Поделиться",
-          icon: "📤",
-          onClick: () => handleAction("share")
+          id: "move",
+          label: "Переместить",
+          icon: "➡️",
+          onClick: () => handleMove(currentFile)
         }
       )
     }
 
-    items.push(
+    // Общие действия
+    menuItems.push(
       {
         id: "separator1",
         label: "",
@@ -74,9 +111,10 @@ export const FileItem: React.FC<FileItemProps> = ({
         id: "delete",
         label: "Удалить",
         icon: "🗑️",
-        onClick: () => handleAction("delete"),
+        onClick: () => handleDelete(currentFile),
         destructive: true
       },
+
       {
         id: "separator2",
         label: "",
@@ -88,19 +126,29 @@ export const FileItem: React.FC<FileItemProps> = ({
         id: "info",
         label: "Свойства",
         icon: "ℹ️",
-        onClick: () => handleAction("info")
+        onClick: () => handleShowInfo(currentFile)
       }
     )
 
-    return items
+    return menuItems
   }
 
+  const itemClasses: string = [
+    styles.fileItem,
+    className,
+    isSelected && styles.selected,
+    isDragMode && canDropHere && styles.dropTarget,
+    isDragMode && !canDropHere && !isSelected && styles.disabled
+  ]
+    .filter(Boolean)
+    .join(" ")
+
   return (
-    <div className={`${styles.fileItem} ${className}`}>
-      {/* Иконка файла/папки */}
+    <div className={itemClasses} onClick={handleClick}>
+      {/* Иконка */}
       <span className={styles.icon}>{type === "folder" ? "📁" : "📄"}</span>
 
-      {/* Информация о файле */}
+      {/* Информация */}
       <div className={styles.fileInfo}>
         <div className={styles.fileName}>{name}</div>
         {(size || modified) && (
@@ -112,7 +160,19 @@ export const FileItem: React.FC<FileItemProps> = ({
         )}
       </div>
 
-      <DropdownMenu items={getMenuItems()} align='left' size='md' />
+      {/* Индикаторы состояния */}
+      {isSelected && <div className={styles.selectedBadge}>✂️</div>}
+
+      {isDragMode && canDropHere && (
+        <div className={styles.dropHint}>Move here</div>
+      )}
+
+      {/* Dropdown menu */}
+      {!isDragMode && (
+        <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+          <DropdownMenu items={getMenuItems()} align='left' size='md' />
+        </div>
+      )}
     </div>
   )
 }
