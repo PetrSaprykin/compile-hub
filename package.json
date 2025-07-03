@@ -12,10 +12,16 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,scss}\""
   },
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.4",
     "@fontsource/inter": "^5.2.6",
+    "@uiw/codemirror-theme-atomone": "^4.23.14",
+    "@uiw/react-codemirror": "^4.23.14",
+    "@xterm/xterm": "^5.5.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
+    "react-resizable-panels": "^3.0.3",
+    "react-router-dom": "^7.6.2",
     "zustand": "^5.0.5"
   },
   "devDependencies": {
