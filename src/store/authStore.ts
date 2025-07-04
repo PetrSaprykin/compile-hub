@@ -91,13 +91,13 @@ export const useAuthStore = create<AuthState>((set, get) => {
     },
 
     setUsername: (username: string, isReg: boolean) => {
-      const { isValid, message } = FormValidators.validateUsername(username)
+      const { isValid, text } = FormValidators.validateUsername(username)
 
       set((state) => ({
         username,
         errors: {
           ...state.errors,
-          username: { isAvialable: isValid, message: message }
+          username: { isAvialable: isValid, message: text }
         },
         isValidating: isValid && isReg ? true : false
       }))
@@ -115,13 +115,13 @@ export const useAuthStore = create<AuthState>((set, get) => {
         email,
         errors: {
           ...state.errors,
-          email: FormValidators.validateEmail(email).message
+          email: FormValidators.validateEmail(email).text
         }
       })),
 
     setPassword: (password: string) =>
       set((state) => {
-        const passwordError = FormValidators.validatePassword(password).message
+        const passwordError = FormValidators.validatePassword(password).text
         let confirmError = ""
 
         if (state.confirmPassword && state.confirmPassword !== password) {

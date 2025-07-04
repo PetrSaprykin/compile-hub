@@ -4,7 +4,6 @@ type ModalStore = {
   isOpen: boolean
   isLocked: boolean
   content: React.ReactNode | null
-  type: "auth" | "error" | "rename" | "confirm" | "info"
   openModal: (content: React.ReactNode) => void
   setIsLocked: (state: boolean) => void
   closeModal: () => void

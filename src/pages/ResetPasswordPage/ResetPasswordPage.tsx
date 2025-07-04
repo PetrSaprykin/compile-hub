@@ -30,7 +30,7 @@ export default function ResetPasswordPage() {
     const result = FormValidators.validateEmail(email)
     setMessage({
       isValid: result.isValid,
-      text: result.message
+      text: result.text
     })
 
     if (result.isValid) {

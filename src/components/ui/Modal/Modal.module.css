@@ -26,13 +26,6 @@
   border: 1px solid var(--border-error-color);
 }
 
-.green {
-  color: var(--text-success);
-}
-.red {
-  color: var(--text-error);
-}
-
 @keyframes modalScale {
   0% {
     opacity: 0;
@@ -41,20 +34,5 @@
   100% {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-/* перенести в button компонент */
-.buttonLoadSpinner {
-  animation: spin 0.5s linear infinite;
-  color: var(--text-color);
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }

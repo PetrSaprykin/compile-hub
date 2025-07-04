@@ -27,6 +27,7 @@ export const Modal = () => {
     зажатии лкм на окне, переведении курсора на бэкдроп и отпускании 
     мыши окно закрывалось 
   */
+
   const handleMouseDown = (e: React.MouseEvent) => {
     mouseDownTarget.current = e.target
   }

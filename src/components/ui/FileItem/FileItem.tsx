@@ -1,5 +1,3 @@
-// Обновленный FileItem с использованием useFileActions
-
 import React from "react"
 import {
   DropdownMenu,
@@ -8,7 +6,7 @@ import {
 import { useFileActions } from "@/hooks/useFileActions"
 import styles from "./FileItem.module.css"
 
-interface FileItemProps {
+export interface FileItemProps {
   id: number
   name: string
   type: "file" | "folder"

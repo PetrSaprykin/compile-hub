@@ -11,7 +11,7 @@ export const Editor = () => {
   const [output, setOutput] = useState<string[]>([])
   const [code, setCode] = useState("console.log('Hello World!');")
 
-  // Ресайз редактора
+  // авторесайз редактора
   useEffect(() => {
     if (!containerRef.current) return
 
@@ -25,7 +25,7 @@ export const Editor = () => {
     return () => resizeObserver.disconnect()
   }, [])
 
-  // Функция выполнения кода
+  // Функция выполнения кода (JS)
   const executeCode = () => {
     try {
       const newOutput = []

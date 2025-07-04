@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import { ROUTES } from "@/router/routes"
-
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Logo } from "@/components/ui/Logo"
@@ -183,11 +182,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isReg = false }) => {
         <p
           className={`${styles.statusMessage} ${styles[statusMessage.isSuccess ? "green" : "red"]}`}
         >
+          {/* пробел чтобы не менялся размер окошка при появлении сообщени */}
           {statusMessage.text || "\u00A0"}
         </p>
         <Button
           variant={mode === "register" ? "secondary" : "primary"}
-          style={{ height: "35px" }}
           disabled={isLoading || isValidating}
           onClick={() => {
             if (mode === "register") {
@@ -205,7 +204,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isReg = false }) => {
         </Button>
         <Button
           variant={mode === "register" ? "primary" : "secondary"}
-          style={{ height: "35px", order: `${mode === "register" ? 0 : -1}` }}
+          style={{ order: `${mode === "register" ? 0 : -1}` }}
           disabled={
             isLoading ||
             isValidating ||

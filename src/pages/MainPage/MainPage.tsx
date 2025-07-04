@@ -6,7 +6,6 @@ export default function MainPage() {
     <main className={styles.main}>
       <Filebar />
       <div className={styles.editorContainer}>
-        <div className={styles.controlPanel}></div>
         <Editor />
       </div>
     </main>

@@ -1,4 +1,6 @@
 import { useCallback } from "react"
+import { useModalStore } from "@/store/modalStore"
+import { RenameModal } from "@/components/ui/Modal"
 
 export interface FileItem {
   id: number
@@ -17,28 +19,35 @@ interface FileActionsConfig {
 
 export const useFileActions = (config: FileActionsConfig = {}) => {
   const { onMove, onFileUpdate, showNotification } = config
+  const { openModal, closeModal } = useModalStore()
 
-  // Переименование
-  const handleRename = useCallback(
-    async (file: FileItem) => {
-      try {
-        const newName = prompt("Введите новое имя:", file.name)
-        if (!newName || newName === file.name) return
+  // переименование файла
+  const handleRename = useCallback(async (file: FileItem) => {
+    try {
+      const newName = await new Promise<string | null>((resolve) => {
+        openModal(
+          <RenameModal
+            type={file.type}
+            initialName={file.name}
+            onCancel={closeModal}
+            onConfirm={(newName: string) => {
+              resolve(newName)
+              closeModal()
+              return
+            }}
+          />
+        )
+      })
 
+      if (newName) {
         // TODO: Здесь будет API вызов
-        console.log(`Переименование ${file.name} в ${newName}`)
-
-        // Обновляем локальное состояние
-        // onFileUpdate?.(updatedFiles)
-
-        showNotification?.(`Файл переименован в "${newName}"`, "success")
-      } catch (error) {
-        console.error("Ошибка переименования:", error)
-        showNotification?.("Ошибка при переименовании файла", "error")
+        console.log("Переименовано, новое имя: " + newName)
       }
-    },
-    [showNotification]
-  )
+    } catch (error) {
+      console.error("Ошибка переименования:", error)
+      // можно будет добавить уведомление об ошибке в popup
+    }
+  }, [])
 
   // Удаление
   const handleDelete = useCallback(
@@ -88,7 +97,7 @@ export const useFileActions = (config: FileActionsConfig = {}) => {
     [showNotification]
   )
 
-  // Перемещение (вызывает внешний обработчик)
+  // перемещение
   const handleMove = useCallback(
     (file: FileItem) => {
       console.log(`Начинаем перемещение ${file.name}`)
@@ -101,7 +110,9 @@ export const useFileActions = (config: FileActionsConfig = {}) => {
   const handleShowInfo = useCallback((file: FileItem) => {
     console.log(`Показ информации о ${file.name}`)
     // TODO: Открыть модальное окно с информацией о файле
-    alert(`Информация о файле:\nИмя: ${file.name}\nТип: ${file.type}\nID: ${file.id}`)
+    alert(
+      `Информация о файле:\nИмя: ${file.name}\nТип: ${file.type}\nID: ${file.id}`
+    )
   }, [])
 
   return {

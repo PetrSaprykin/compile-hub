@@ -1,5 +1,3 @@
-// УПРОЩЕННАЯ ВЕРСИЯ Filebar компонента
-
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import styles from "./Filebar.module.css"
@@ -16,10 +14,10 @@ export const Filebar = () => {
   const [searchText, setSearchText] = useState("")
   const fileListRef = useRef<HTMLDivElement>(null!)
 
-  // Выносим данные в отдельный хук
+  // получение файлов отдельным хуком
   const { folders, files, moveFile } = useMockData()
 
-  // Выносим навигацию в отдельный хук
+  // навигация отдельным хуком
   const {
     currentFolder,
     navigationHistory,
@@ -28,7 +26,7 @@ export const Filebar = () => {
     getCurrentFolderName
   } = useFileNavigation(folders)
 
-  // Drag & drop остается как есть
+  // пермещение файлов отдельным хуков
   const {
     selectedItem,
     isDragMode,
@@ -47,7 +45,7 @@ export const Filebar = () => {
 
   // УПРОЩЕННАЯ функция фильтрации
   const getVisibleItems = () => {
-    // Получаем элементы для текущей папки
+    // получаем элементы для текущей папки
     let items =
       currentFolder === null
         ? [
@@ -56,14 +54,14 @@ export const Filebar = () => {
           ]
         : files.filter((file: FileItemProps) => file.folder === currentFolder)
 
-    // Применяем поиск
+    // применяем поиск
     if (searchText) {
       items = items.filter((item: FileItemProps) =>
         item.name.toLowerCase().includes(searchText.toLowerCase())
       )
     }
 
-    // Сортируем: папки сверху
+    // сортируем, сначала папки
     return items.sort((a: FileItemProps, b: FileItemProps) => {
       if (a.type === "folder" && b.type !== "folder") return -1
       if (a.type !== "folder" && b.type === "folder") return 1
@@ -71,7 +69,7 @@ export const Filebar = () => {
     })
   }
 
-  // УПРОЩЕННЫЕ обработчики
+  // обработчик клика по папке
   const handleFolderClick = (folderId: number) => {
     if (isDragMode) {
       moveToTarget(folderId, handleMoveItem)
@@ -107,7 +105,6 @@ export const Filebar = () => {
         {/* Навигация */}
         <div className={styles.navigation}>
           {!isDragMode ? (
-            // Обычная навигация
             <>
               <button
                 onClick={handleBackClick}
@@ -121,7 +118,7 @@ export const Filebar = () => {
               </span>
             </>
           ) : (
-            // Режим перетаскивания
+            // кнопки в режиме перетаскивания
             <div className={styles.moveActionsButtons}>
               <button
                 onClick={handleMoveToRoot}
@@ -158,34 +155,40 @@ export const Filebar = () => {
                 // Drag & drop пропсы
                 isSelected={isSelected(item.id)}
                 isDragMode={isDragMode}
-                canDropHere={canDropHere(item.type, item.id)}
-                onSelectForMove={() =>
+                canDropHere={canDropHere(item.type)}
+                onSelectForMove={() => {
                   selectForMove({
                     id: item.id,
                     name: item.name,
                     type: item.type
                   })
-                }
+                  fileListRef.current.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                  })
+                }}
                 onDropHere={() => moveToTarget(item.id, handleMoveItem)}
               />
             ))
           ) : (
             <span className={styles.searchError}>
-              {searchText ? `Файл "${searchText}" не найден` : "Папка пуста"}
+              {searchText
+                ? `File "${searchText}" not found`
+                : "Folder is empty"}
             </span>
           )}
         </div>
 
         <hr />
 
-        {/* Кнопки создания */}
+        {/* Кнопки создания папки или файла */}
         <div className={styles.buttons}>
           <Button variant='secondary'>New file</Button>
           <Button variant='secondary'>New folder</Button>
         </div>
       </div>
 
-      {/* Переключатель */}
+      {/* Переключатель файлбара */}
       <button
         className={styles.openMenuButton}
         onClick={() => setFilebarOpen(!isFilebarOpen)}

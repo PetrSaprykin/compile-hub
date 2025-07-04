@@ -17,6 +17,14 @@ export const VALIDATION_RULES = {
   EMAIL: {
     PATTERN: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   },
+  FILENAME: {
+    MAX_LENGTH: 20,
+    PATTERN: /^[a-zA-Z0-9_-]*$/
+  },
+  FOLDERNAME: {
+    MAX_LENGTH: 20,
+    PATTERN: /^[\p{L}\d_ -]+$/u
+  },
   TIMING: {
     DEBOUNCE_DELAY: 300,
     SERVER_TIMEOUT: 5000 // максимальное время ожидания от сервер

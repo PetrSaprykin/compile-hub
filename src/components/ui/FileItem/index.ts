@@ -1,1 +1,1 @@
-export { FileItem } from "./FileItem"
+export { FileItem, type FileItemProps } from "./FileItem"

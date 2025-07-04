@@ -36,9 +36,9 @@ export const useClickDrag = () => {
   )
 
   const canDropHere = useCallback(
-    (itemType: "file" | "folder", itemId: number): boolean => {
+    (itemType: "file" | "folder"): boolean => {
       // Можно перемещать в папки, но не в тот же элемент
-      return !!(selectedItem && itemType === "folder" && selectedItem.id !== itemId)
+      return !!(selectedItem && itemType === "folder")
     },
     [selectedItem]
   )

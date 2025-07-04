@@ -43,3 +43,24 @@ a {
   text-align: center;
   order: -2;
 }
+
+.green {
+  color: var(--text-success);
+}
+.red {
+  color: var(--text-error);
+}
+
+.buttonLoadSpinner {
+  animation: spin 0.5s linear infinite;
+  color: var(--text-color);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

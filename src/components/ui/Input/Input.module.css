@@ -70,6 +70,8 @@ p {
 
 .errorNote {
   color: var(--text-error);
+  line-height: 1.25;
+  font-size: 13px;
 }
 
 .successNote {
