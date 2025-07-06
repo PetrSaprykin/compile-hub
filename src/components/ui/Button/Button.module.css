@@ -9,6 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none;
 }
 
 .button:disabled {
@@ -21,7 +22,7 @@
   background-color: var(--primary);
 }
 .primary:hover {
-  border-color: var(--text-color);
+  background-color: var(--primary-hover);
 }
 
 .secondary {

@@ -1,60 +1,48 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useRef } from "react"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { PiNotePencil } from "react-icons/pi"
-import styles from "./RenameModal.module.css"
-import { useMockData } from "@/hooks/useMockData"
+import styles from "./CreateItemModal.module.css"
+import { useFileStore } from "@/store/fileStore"
 import { validateFilename, validateFoldername } from "@/utils/validators"
 
-interface RenameModalProps {
+interface CreateItemModalProps {
   type: "file" | "folder"
-  initialName: string
-  onConfirm: (newName: string) => void
+  onConfirm: (name: string) => void
   onCancel: () => void
 }
 
-export const RenameModal: React.FC<RenameModalProps> = ({
+export const CreateItemModal: React.FC<CreateItemModalProps> = ({
   type,
-  initialName,
   onConfirm,
   onCancel
 }) => {
-  const { files, folders } = useMockData()
+  const { items } = useFileStore()
 
   const [message, setMessage] = useState<{
     isValid: boolean
     text: string
   }>({ isValid: false, text: "" })
 
+  // для папок расширение (ext) всегда = ""
+  const defaultExtension = type === "file" ? ".py" : ""
+
   const [displayValue, setDisplayValue] = useState("")
-  const [extension, setExtension] = useState("")
+  const [extension, setExtension] = useState(defaultExtension)
   const inputRef = useRef<HTMLInputElement>(null)
 
   // разделение имени файла и расширения (ext) (для папок ext = "")
-  useEffect(() => {
-    const lastDotIndex = initialName.lastIndexOf(".")
-    if (lastDotIndex > 0) {
-      setExtension(initialName.substring(lastDotIndex))
-      setDisplayValue(initialName.substring(0, lastDotIndex))
-    } else {
-      setExtension("")
-      setDisplayValue(initialName)
-    }
-  }, [initialName])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newBaseName = e.target.value
-    const newFullName = newBaseName + extension
+    const name = e.target.value
+    const fullName = e.target.value + extension
 
-    setDisplayValue(newBaseName)
+    setDisplayValue(name)
 
     const validationResult =
-      type === "file"
-        ? validateFilename(newBaseName)
-        : validateFoldername(newBaseName)
+      type === "file" ? validateFilename(name) : validateFoldername(name)
 
-    const items = type === "file" ? files : folders
-    const isAvailable = !items.some((item) => item.name === newFullName)
+    const isAvailable = !items.some((item) => item.name === fullName)
 
     if (!validationResult.isValid) {
       setMessage(validationResult)
@@ -73,6 +61,7 @@ export const RenameModal: React.FC<RenameModalProps> = ({
   }
 
   const handleConfirm = () => {
+    // для файла добавляем расширение
     if (message.isValid) {
       onConfirm(displayValue + extension)
     }
@@ -80,11 +69,14 @@ export const RenameModal: React.FC<RenameModalProps> = ({
 
   return (
     <div className={styles.content}>
-      <p>Renaming file {initialName}</p>
+      <p>Creating {type}</p>
       <div className={styles.inputContainer}>
         <Input
+          autoFocus={true}
+          autoComplete='off'
+          name='file-name'
           ref={inputRef}
-          placeholder='Enter new filename'
+          placeholder={`Enter ${type}name ${type === "file" ? "without extension" : ""}`}
           icon={<PiNotePencil />}
           value={displayValue}
           message={message}
@@ -95,7 +87,17 @@ export const RenameModal: React.FC<RenameModalProps> = ({
           }}
         />
         {type === "file" && (
-          <span className={styles.extension}>{extension}</span>
+          <select
+            className={styles.selectExt}
+            onChange={(e) => setExtension(e.target.value)}
+            value={extension}
+          >
+            <option value='.py'>Python</option>
+            <option value='.go'>Golang</option>
+            <option value='.java'>Java</option>
+            <option value='.cpp'>C++</option>
+            <option value='.js'>JavaScript</option>
+          </select>
         )}
       </div>
       <div className={styles.buttonGroup}>

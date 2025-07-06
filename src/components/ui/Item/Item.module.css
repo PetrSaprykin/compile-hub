@@ -13,13 +13,23 @@
   cursor: pointer;
 }
 
-.fileItem:hover {
+.fileItem:hover,
+.fileItem.active {
   background-color: var(--bg-secondary);
 }
 
 .icon {
   margin-right: 12px;
-  font-size: 24px;
+  width: 40px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon img {
+  width: 100%;
+  height: 100%;
 }
 
 .fileInfo {
@@ -134,3 +144,9 @@
   white-space: nowrap;
 }
 /* ========== ПАНЕЛЬ РЕЖИМА ПЕРЕТАСКИВАНИЯ ========== */
+
+/* небольшой костыль для того чтобы блокировать скролл FileBar но оставлять полосу прокрутки видимой */
+/* ВРЕМЕННО  */
+.noScroll {
+  pointer-events: none; /* блокируем взаимодействие */
+}

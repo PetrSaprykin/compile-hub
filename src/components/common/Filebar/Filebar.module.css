@@ -66,10 +66,9 @@ hr {
 .fileList {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: calc(var(--spacing-sm) - 2px);
   border-radius: var(--border-radius);
   overflow-y: auto;
-  /* Возвращаем скролл */
   overflow-x: hidden;
   height: 100%;
   padding-right: 6px;
@@ -85,14 +84,14 @@ hr {
   border-radius: var(--border-radius);
 }
 
-.buttons {
+.createingButtons {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
   user-select: none;
 }
 
-.buttons button {
+.createingButtons button {
   width: 100%;
 }
 
@@ -153,6 +152,7 @@ hr {
 .navigation {
   display: flex;
   align-items: center;
+  margin: -5px 0;
 }
 
 .backButton {

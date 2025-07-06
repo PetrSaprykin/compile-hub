@@ -113,10 +113,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isReg = false }) => {
   return (
     <div className={styles.content}>
       <Logo variant='compact' />
-      <h3 style={{ fontWeight: 400 }}>Welcome to CompileHub!</h3>
+      <h3>Welcome to CompileHub!</h3>
       <div className={styles.authForm}>
         <Input
           type='text'
+          autoFocus={true}
           className={`${errors.username.isAvialable ? "success" : "error"} ${styles.input}`}
           isRequired={true}
           isValidating={isValidating}

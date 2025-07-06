@@ -19,6 +19,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       isValidating = false,
       message,
       hidePassDeps = [],
+      type,
       ...props
     },
     ref
@@ -41,18 +42,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     )
     return (
       <div
-        className={`${styles.inputContainer} ${message?.text ? styles.hasNote : ""} ${props.className}`}
+        className={`${styles.inputContainer} ${message?.text ? styles.hasNote : ""} ${props?.className}`}
       >
         <div className={styles.inputLine}>
           {icon}
           <input
             ref={ref}
             {...props}
-            type={!showPass && props.type === "password" ? "password" : "text"}
-            className={`${isValidating ? styles.isValidating : ""} ${props.type === "password" ? styles.isPassword : ""}`}
+            type={!showPass && type === "password" ? "password" : "text"}
+            className={`${isValidating ? styles.isValidating : ""} ${type === "password" ? styles.isPassword : ""}`}
+            name={"input"}
           />
           {isValidating && <CgSpinner className={styles.spinner} />}
-          {props.type === "password" && showPasswordIcon}
+          {type === "password" && showPasswordIcon}
         </div>
         {message?.text && (
           <p className={styles[message.isValid ? "successNote" : "errorNote"]}>

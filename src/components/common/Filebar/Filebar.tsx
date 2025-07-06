@@ -1,21 +1,35 @@
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import styles from "./Filebar.module.css"
-import { FileItem, type FileItemProps } from "@/components/ui/FileItem"
-import { useClickDrag } from "@/hooks/useClickDrag"
+import { useClickDragStore } from "@/store/clickDragStore"
 import { useFileNavigation } from "@/hooks/useFileNavigation"
-import { useMockData } from "@/hooks/useMockData"
 import { MdSearch, MdChevronRight, MdChevronLeft } from "react-icons/md"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState, useMemo } from "react"
 import { IoArrowBack } from "react-icons/io5"
+import { Item } from "@/components/ui/Item"
+import { useFileActions } from "@/hooks/useFileActions"
+import { type ItemProps, type FolderItem } from "@/types/fileSystem"
+import { useFileFilter } from "@/hooks/useFileFilter"
+import { useFileStore } from "@/store/fileStore"
+import { useMockData } from "@/hooks/useMockData"
 
 export const Filebar = () => {
   const [isFilebarOpen, setFilebarOpen] = useState(true)
   const [searchText, setSearchText] = useState("")
   const fileListRef = useRef<HTMLDivElement>(null!)
 
+  const { itemsArray } = useMockData()
   // получение файлов отдельным хуком
-  const { folders, files, moveFile } = useMockData()
+  const { items, setItems } = useFileStore()
+
+  useEffect(() => {
+    setItems(itemsArray)
+  }, [])
+
+  const folders = useMemo(
+    () => items.filter((item): item is FolderItem => item.type === "folder"),
+    [items]
+  )
 
   // навигация отдельным хуком
   const {
@@ -27,64 +41,29 @@ export const Filebar = () => {
   } = useFileNavigation(folders)
 
   // пермещение файлов отдельным хуков
-  const {
-    selectedItem,
-    isDragMode,
-    selectForMove,
-    moveToTarget,
-    cancelMove,
-    isSelected,
-    canDropHere
-  } = useClickDrag()
+  const { isDragMode, moveToTarget, cancelMove, isSelected } =
+    useClickDragStore()
 
-  // УПРОЩЕННАЯ функция перемещения
-  const handleMoveItem = (itemId: number, targetId: number | null) => {
-    moveFile(itemId, targetId)
-    console.log(`Файл ${selectedItem?.name} перемещен`)
-  }
-
-  // УПРОЩЕННАЯ функция фильтрации
-  const getVisibleItems = () => {
-    // получаем элементы для текущей папки
-    let items =
-      currentFolder === null
-        ? [
-            ...folders,
-            ...files.filter((file: FileItemProps) => file.folder === null)
-          ]
-        : files.filter((file: FileItemProps) => file.folder === currentFolder)
-
-    // применяем поиск
-    if (searchText) {
-      items = items.filter((item: FileItemProps) =>
-        item.name.toLowerCase().includes(searchText.toLowerCase())
-      )
-    }
-
-    // сортируем, сначала папки
-    return items.sort((a: FileItemProps, b: FileItemProps) => {
-      if (a.type === "folder" && b.type !== "folder") return -1
-      if (a.type !== "folder" && b.type === "folder") return 1
-      return 0
-    })
-  }
+  const { handleCreate } = useFileActions()
 
   // обработчик клика по папке
-  const handleFolderClick = (folderId: number) => {
-    if (isDragMode) {
-      moveToTarget(folderId, handleMoveItem)
-    } else {
-      goToFolder(folderId)
+  const handleClick = (item: ItemProps) => {
+    if (item.type === "folder") {
+      isDragMode ? moveToTarget(item.id) : goToFolder(item.id)
+    } else if (!isDragMode) {
+      // открытие файла
+      console.log("открытие файла")
     }
   }
 
-  const handleMoveToRoot = () => moveToTarget(null, handleMoveItem)
+  const handleMoveToRoot = () => moveToTarget(null)
+
   const handleBackClick = () => {
     goBack()
     cancelMove()
   }
 
-  const visibleItems = getVisibleItems()
+  const visibleItems = useFileFilter(items, currentFolder, searchText)
 
   return (
     <div
@@ -94,7 +73,7 @@ export const Filebar = () => {
         {/* Поиск */}
         <Input
           icon={<MdSearch />}
-          placeholder='Поиск файлов...'
+          placeholder='Searching files...'
           className={styles.search}
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
@@ -144,30 +123,18 @@ export const Filebar = () => {
           ref={fileListRef}
         >
           {visibleItems.length > 0 ? (
-            visibleItems.map((item: FileItemProps) => (
-              <FileItem
+            visibleItems.map((item: ItemProps) => (
+              <Item
                 key={item.id}
                 {...item}
-                onClick={() =>
-                  item.type === "folder" && handleFolderClick(item.id)
+                onClick={
+                  () => handleClick(item)
+                  // тут же будет открытие файоа при item.type === "file"
                 }
                 fileListRef={fileListRef}
-                // Drag & drop пропсы
                 isSelected={isSelected(item.id)}
                 isDragMode={isDragMode}
-                canDropHere={canDropHere(item.type)}
-                onSelectForMove={() => {
-                  selectForMove({
-                    id: item.id,
-                    name: item.name,
-                    type: item.type
-                  })
-                  fileListRef.current.scrollTo({
-                    top: 0,
-                    behavior: "smooth"
-                  })
-                }}
-                onDropHere={() => moveToTarget(item.id, handleMoveItem)}
+                canDropHere={isDragMode && item.type === "folder"}
               />
             ))
           ) : (
@@ -182,9 +149,13 @@ export const Filebar = () => {
         <hr />
 
         {/* Кнопки создания папки или файла */}
-        <div className={styles.buttons}>
-          <Button variant='secondary'>New file</Button>
-          <Button variant='secondary'>New folder</Button>
+        <div className={styles.createingButtons}>
+          <Button variant='secondary' onClick={() => handleCreate("file")}>
+            New file
+          </Button>
+          <Button variant='secondary' onClick={() => handleCreate("folder")}>
+            New folder
+          </Button>
         </div>
       </div>
 

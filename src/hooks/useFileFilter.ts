@@ -1,27 +1,39 @@
 import { useMemo } from "react"
-import { type FileItem } from "@/hooks/useFileActions"
+import { type Item } from "@/types/fileSystem"
 
 export const useFileFilter = (
-  folders: FileItem[],
-  files: FileItem[],
+  items: Item[],
   currentFolder: number | null,
   searchText: string
-) => {
+): Item[] => {
   return useMemo(() => {
-    // Получаем базовые элементы
-    let items =
-      currentFolder === null ? [...folders] : files.filter((file) => file.folder === currentFolder)
+    let filteredItems: Item[]
 
-    // Применяем поиск
-    if (searchText) {
-      items = items.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()))
+    if (currentFolder === null) {
+      // в корне показываем папки и файлы
+      filteredItems = items.filter(
+        (item) => item.type === "folder" || (item.type === "file" && item.folder === null)
+      )
+    } else {
+      // в папке:  файлы, у которых совпадает свойство folder
+      filteredItems = items.filter((item) => item.type === "file" && item.folder === currentFolder)
     }
 
-    // Сортируем
-    return items.sort((a, b) => {
+    // фильтрация (поиск) по имени
+    if (searchText.trim()) {
+      const lowerSearch = searchText.toLowerCase()
+      filteredItems = filteredItems.filter((item) => item.name.toLowerCase().includes(lowerSearch))
+    }
+
+    // сортировка если находимся в корне сначала папки, потом файлы
+    return filteredItems.sort((a, b) => {
       if (a.type === "folder" && b.type !== "folder") return -1
       if (a.type !== "folder" && b.type === "folder") return 1
-      return 0
+
+      const dateA = new Date(a.modified ?? 0)
+      const dateB = new Date(b.modified ?? 0)
+
+      return dateB.getTime() - dateA.getTime()
     })
-  }, [folders, files, currentFolder, searchText])
+  }, [items, currentFolder, searchText])
 }

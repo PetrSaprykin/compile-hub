@@ -8,6 +8,13 @@
   gap: var(--spacing-lg);
 }
 
+.content h3 {
+  font-weight: 400;
+  user-select: none;
+}
+.content .logo {
+  cursor: alias;
+}
 .authForm {
   width: 100%;
   display: flex;

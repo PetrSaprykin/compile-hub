@@ -1,94 +1,78 @@
 import { useCallback } from "react"
 import { useModalStore } from "@/store/modalStore"
-import { RenameModal } from "@/components/ui/Modal"
-
-export interface FileItem {
-  id: number
-  name: string
-  size?: string
-  modified?: string
-  type: "file" | "folder"
-  folder?: number | null
-}
+import { useFileStore } from "@/store/fileStore"
+import { RenameModal } from "@/components/modals/RenameModal"
+import { CreateItemModal } from "@/components/modals/CreateItemModal"
+import { useClickDragStore } from "@/store/clickDragStore"
+import { type Item } from "@/types/fileSystem"
 
 interface FileActionsConfig {
-  onMove?: (fileId: number) => void
-  onFileUpdate?: (files: FileItem[]) => void
   showNotification?: (message: string, type: "success" | "error") => void
 }
 
+// show notification на будущий попап внизу справа
 export const useFileActions = (config: FileActionsConfig = {}) => {
-  const { onMove, onFileUpdate, showNotification } = config
+  const { showNotification } = config
+  const { selectForMove } = useClickDragStore()
   const { openModal, closeModal } = useModalStore()
+  const { items, addItem, updateItem, deleteItem } = useFileStore()
 
-  // переименование файла
-  const handleRename = useCallback(async (file: FileItem) => {
-    try {
-      const newName = await new Promise<string | null>((resolve) => {
-        openModal(
-          <RenameModal
-            type={file.type}
-            initialName={file.name}
-            onCancel={closeModal}
-            onConfirm={(newName: string) => {
-              resolve(newName)
-              closeModal()
-              return
-            }}
-          />
-        )
-      })
-
-      if (newName) {
-        // TODO: Здесь будет API вызов
-        console.log("Переименовано, новое имя: " + newName)
-      }
-    } catch (error) {
-      console.error("Ошибка переименования:", error)
-      // можно будет добавить уведомление об ошибке в popup
-    }
-  }, [])
-
-  // Удаление
-  const handleDelete = useCallback(
-    async (file: FileItem) => {
+  const handleRename = useCallback(
+    async (item: Item) => {
       try {
-        const confirmed = confirm(
-          `Удалить ${file.type === "folder" ? "папку" : "файл"} "${file.name}"?`
-        )
-        if (!confirmed) return
+        const newName = await new Promise<string | null>((resolve) => {
+          openModal(
+            <RenameModal
+              type={item.type}
+              initialName={item.name}
+              onCancel={closeModal}
+              onConfirm={(newName: string) => {
+                resolve(newName)
+                closeModal()
+              }}
+            />
+          )
+        })
 
-        // TODO: Здесь будет API вызов
-        console.log(`Удаление ${file.name}`)
-
-        showNotification?.(
-          `${file.type === "folder" ? "Папка" : "Файл"} "${file.name}" удален`,
-          "success"
-        )
+        if (newName && newName !== item.name) {
+          updateItem(item.id, { name: newName })
+          showNotification?.(
+            `"${item.name}" переименован в "${newName}"`,
+            "success"
+          )
+        }
       } catch (error) {
-        console.error("Ошибка удаления:", error)
-        showNotification?.("Ошибка при удалении", "error")
+        console.error("Ошибка переименования:", error)
+        showNotification?.("Ошибка при переименовании", "error")
       }
     },
-    [showNotification]
+    [openModal, closeModal, updateItem, showNotification]
   )
 
-  // Скачивание (только для файлов)
+  const handleDelete = useCallback(
+    (item: Item) => {
+      const confirmed = confirm(
+        `Удалить ${item.type === "folder" ? "папку" : "файл"} "${item.name}"?`
+      )
+      if (!confirmed) return
+
+      deleteItem(item.id)
+      showNotification?.(`"${item.name}" удален`, "success")
+    },
+    [deleteItem, showNotification]
+  )
+
   const handleDownload = useCallback(
-    async (file: FileItem) => {
-      if (file.type !== "file") return
+    (item: Item) => {
+      if (item.type !== "file") return
 
       try {
-        // TODO: Здесь будет логика скачивания
-        console.log(`Скачивание ${file.name}`)
-
-        // Имитация скачивания
         const link = document.createElement("a")
-        link.href = `#download-${file.id}` // В реальности тут будет URL файла
-        link.download = file.name
+        link.href = `#download-${item.id}` // TODO: заменить на реальный путь
+        link.download = item.name
         link.click()
 
-        showNotification?.(`Файл "${file.name}" скачан`, "success")
+        showNotification?.(`Файл "${item.name}" скачан`, "success")
       } catch (error) {
         console.error("Ошибка скачивания:", error)
         showNotification?.("Ошибка при скачивании файла", "error")
@@ -97,29 +81,78 @@ export const useFileActions = (config: FileActionsConfig = {}) => {
     [showNotification]
   )
 
-  // перемещение
   const handleMove = useCallback(
-    (file: FileItem) => {
-      console.log(`Начинаем перемещение ${file.name}`)
-      onMove?.(file.id)
+    (item: Item) => {
+      if (item.type === "file") {
+        console.log(`Перемещение элемента с id: ${item.id}`)
+        selectForMove({
+          id: item.id,
+          name: item.name,
+          type: item.type
+        })
+      }
     },
-    [onMove]
+    [selectForMove]
   )
 
-  // Показать свойства
-  const handleShowInfo = useCallback((file: FileItem) => {
-    console.log(`Показ информации о ${file.name}`)
-    // TODO: Открыть модальное окно с информацией о файле
+  const handleShowInfo = useCallback((item: Item) => {
     alert(
-      `Информация о файле:\nИмя: ${file.name}\nТип: ${file.type}\nID: ${file.id}`
+      `Информация о:\nИмя: ${item.name}\nТип: ${item.type}\nID: ${item.id}\nРазмер: ${item.size ?? "—"}\nИзменён: ${item.modified ?? "—"}`
     )
   }, [])
+
+  const handleCreate = useCallback(
+    async (type: "file" | "folder", parentFolderId: number | null = null) => {
+      const name = await new Promise<string | null>((resolve) => {
+        openModal(
+          <CreateItemModal
+            type={type}
+            onCancel={closeModal}
+            onConfirm={(name: string) => {
+              resolve(name)
+              closeModal()
+            }}
+          />
+        )
+      })
+
+      if (name) {
+        const lastId = items[items.length - 1]?.id ?? 0
+        const newItem: Item =
+          type === "file"
+            ? {
+                id: lastId + 1,
+                name: name,
+                type: "file",
+                folder: parentFolderId,
+                size: "0b",
+                modified: new Date().toISOString()
+              }
+            : {
+                id: lastId + 1,
+                name: name,
+                type: "folder",
+                size: "0b",
+                modified: new Date().toISOString()
+              }
+
+        addItem(newItem)
+
+        showNotification?.(
+          `${type === "folder" ? "Папка" : "Файл"} "${name}" создан`,
+          "success"
+        )
+      }
+    },
+    [items, addItem, showNotification, openModal, closeModal]
+  )
 
   return {
     handleRename,
     handleDelete,
     handleDownload,
     handleMove,
-    handleShowInfo
+    handleShowInfo,
+    handleCreate
   }
 }

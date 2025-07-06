@@ -10,6 +10,7 @@
 .content > p {
   text-align: center;
   font-size: var(--font-size-lg);
+  user-select: none;
 }
 
 .buttonGroup {
@@ -28,12 +29,44 @@
   padding-right: 60px;
 }
 
-.extension {
+.selectExt {
   position: absolute;
   border: 1px solid var(--border-color);
-  padding: 5px 12px 7px 10px;
+  cursor: pointer;
+  height: var(--input-height);
+  padding: 0px 4px;
+  outline: none;
+  background: transparent;
   border-top-right-radius: var(--border-radius);
   border-bottom-right-radius: var(--border-radius);
+  color: var(--text-color);
   top: 0;
   right: 0;
+  transition: var(--transition-normal);
+}
+
+.selectExt:hover {
+  background-color: var(--bg-secondary);
+}
+
+.selectExt option {
+  border-radius: 0;
+  background-color: var(--bg-color);
+  cursor: pointer;
+}
+
+.selectExt span {
+  border-radius: 0;
+  display: block;
+}
+
+.selectExt span:hover {
+  display: none;
+  background-color: blueviolet !important;
+  z-index: 1000;
+}
+
+.selectExt option:hover {
+  cursor: pointer;
+  background: var(--bg-secondary);
 }

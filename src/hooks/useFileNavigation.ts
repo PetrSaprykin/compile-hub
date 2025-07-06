@@ -1,26 +1,26 @@
 import { useState } from "react"
-import { type FileItem } from "@/hooks/useFileActions"
+import { type FolderItem } from "@/types/fileSystem"
 
-export const useFileNavigation = (folders: FileItem[]) => {
+export const useFileNavigation = (folders: FolderItem[]) => {
   const [currentFolder, setCurrentFolder] = useState<number | null>(null)
-  const [navigationHistory, setNavigationHistory] = useState<number[]>([])
+  const [navigationHistory, setNavigationHistory] = useState<(number | null)[]>([])
 
   const goToFolder = (folderId: number) => {
-    setNavigationHistory((prev) => [...prev, currentFolder ?? -1])
+    setNavigationHistory((prev) => [...prev, currentFolder])
     setCurrentFolder(folderId)
   }
 
   const goBack = () => {
-    if (navigationHistory.length > 0) {
-      const previousFolder = navigationHistory[navigationHistory.length - 1]
-      setCurrentFolder(previousFolder === -1 ? null : previousFolder)
-      setNavigationHistory((prev) => prev.slice(0, -1))
-    }
+    if (navigationHistory.length === 0) return
+
+    const previousFolder = navigationHistory[navigationHistory.length - 1]
+    setCurrentFolder(previousFolder)
+    setNavigationHistory((prev) => prev.slice(0, -1))
   }
 
   const getCurrentFolderName = () => {
-    if (currentFolder === null) return "Главная"
-    return folders.find((f) => f.id === currentFolder)?.name || "Неизвестная папка"
+    if (currentFolder === null) return "Home"
+    return folders.find((f) => f.id === currentFolder)?.name || "Unknown folder"
   }
 
   return {

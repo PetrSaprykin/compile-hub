@@ -1,8 +1,9 @@
 import { useModalStore } from "@/store/modalStore"
 import { Button } from "@/components/ui/Button"
 import { Logo } from "@/components/ui/Logo"
+import { Account } from "@/components/common/Account"
 import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher"
-import { AuthModal } from "@/components/ui/Modal"
+import { AuthModal } from "@/components/modals/AuthModal"
 import styles from "./Header.module.css"
 
 export default function Header() {
@@ -27,6 +28,7 @@ export default function Header() {
           >
             Sign Up
           </Button>
+          <Account />
         </div>
       </div>
     </header>

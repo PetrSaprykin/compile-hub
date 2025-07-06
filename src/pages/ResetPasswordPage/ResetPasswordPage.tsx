@@ -9,8 +9,8 @@ import { FormValidators } from "@/utils/validators"
 import { useState } from "react"
 
 import { useModalStore } from "@/store/modalStore"
-import { AuthModal } from "@/components/ui/Modal"
-import { ErrorModal } from "@/components/ui/Modal"
+import { AuthModal } from "@/components/modals/AuthModal"
+import { ErrorModal } from "@/components/modals/ErrorModal"
 
 type message = {
   isValid: boolean

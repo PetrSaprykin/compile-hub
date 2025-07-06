@@ -1,0 +1,33 @@
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+.optionContainer {
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  border-radius: var(--border-radius);
+  padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+.optionContainer > span {
+  white-space: nowrap;
+  font-size: calc(var(--font-size-md) + 1px);
+}
+
+.langSwitcher {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+.langSwitcher > img {
+  border: 1px solid var(--border-color);
+  border-radius: 15%;
+  width: 30px;
+}
