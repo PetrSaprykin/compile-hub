@@ -148,14 +148,16 @@ export const Filebar = () => {
 
         <hr />
 
-        {/* Кнопки создания папки или файла */}
+        {/* Кнопки создания папки или файла, папку в папке создавать нельзя*/}
         <div className={styles.createingButtons}>
           <Button variant='secondary' onClick={() => handleCreate("file")}>
             New file
           </Button>
-          <Button variant='secondary' onClick={() => handleCreate("folder")}>
-            New folder
-          </Button>
+          {currentFolder === null && (
+            <Button variant='secondary' onClick={() => handleCreate("folder")}>
+              New folder
+            </Button>
+          )}
         </div>
       </div>
 
