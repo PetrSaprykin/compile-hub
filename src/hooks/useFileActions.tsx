@@ -3,8 +3,9 @@ import { useModalStore } from "@/store/modalStore"
 import { useFileStore } from "@/store/fileStore"
 import { RenameModal } from "@/components/modals/RenameModal"
 import { CreateItemModal } from "@/components/modals/CreateItemModal"
+import { useEditorState } from "@/store/editorStore"
 import { useClickDragStore } from "@/store/clickDragStore"
-import { type Item } from "@/types/fileSystem"
+import { type FileItem, type FolderItem, type Item } from "@/types/fileSystem"
 
 interface FileActionsConfig {
   showNotification?: (message: string, type: "success" | "error") => void
@@ -16,6 +17,7 @@ export const useFileActions = (config: FileActionsConfig = {}) => {
   const { selectForMove } = useClickDragStore()
   const { openModal, closeModal } = useModalStore()
   const { items, addItem, updateItem, deleteItem } = useFileStore()
+  const { setFile } = useEditorState()
 
   const handleRename = useCallback(
     async (item: Item) => {
@@ -118,26 +120,32 @@ export const useFileActions = (config: FileActionsConfig = {}) => {
 
       if (name) {
         const lastId = items[items.length - 1]?.id ?? 0
-        const newItem: Item =
-          type === "file"
-            ? {
-                id: lastId + 1,
-                name: name,
-                type: "file",
-                folder: parentFolderId,
-                size: "0b",
-                modified: new Date().toISOString()
-              }
-            : {
-                id: lastId + 1,
-                name: name,
-                type: "folder",
-                size: "0b",
-                modified: new Date().toISOString()
-              }
+        let newItem
+
+        if (type === "file") {
+          newItem = {
+            id: lastId + 1,
+            name: name,
+            type: type,
+            folder: parentFolderId,
+            size: "0b",
+            modified: new Date().toISOString()
+          }
+        } else {
+          newItem = {
+            id: lastId + 1,
+            name: name,
+            type: type,
+            size: "0b",
+            modified: new Date().toISOString()
+          }
+        }
 
         addItem(newItem)
 
+        if (type === "file") {
+          setFile(newItem as FileItem)
+        }
         showNotification?.(
           `${type === "folder" ? "Папка" : "Файл"} "${name}" создан`,
           "success"

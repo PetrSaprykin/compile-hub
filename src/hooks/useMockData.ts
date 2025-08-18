@@ -11,7 +11,7 @@ export const useMockData = () => {
     { id: 4, name: "archive", type: "folder", size: "89mb", modified: "2025-06-20T12:00:00.000Z" },        // 2 weeks ago
 
     // Файлы в корне
-    { id: 10, name: "main.py", type: "file", folder: null, size: "2.3kb", modified: "2025-07-04T11:00:00.000Z" },     // 1 hour ago
+    { id: 10, name: "main.py", type: "file", folder: null, size: "2.3kb", modified: "2025-07-04T11:00:00.000Z"  },     // 1 hour ago
     { id: 11, name: "config.js", type: "file", folder: null, size: "1.8kb", modified: "2025-07-04T10:00:00.000Z" },   // 2 hours ago
     { id: 12, name: "utils.go", type: "file", folder: null, size: "4.5kb", modified: "2025-07-03T12:00:00.000Z" },    // 1 day ago
     { id: 13, name: "helper.cpp", type: "file", folder: null, size: "3.2kb", modified: "2025-07-01T12:00:00.000Z" },  // 3 days ago
@@ -47,7 +47,7 @@ export const useMockData = () => {
 
     // Файлы в корневой директории
     { id: 43, name: "exercise_1.py", type: "file", folder: null, size: "1.8kb", modified: "2025-07-04T09:00:00.000Z" },    // 3 hours ago
-    { id: 44, name: "exercise_2.js", type: "file", folder: null, size: "2.1kb", modified: "2025-07-03T12:00:00.000Z" },     // 1 day ago
+    { id: 44, name: "exercise_2.js", type: "file", folder: null, size: "2.1kb", modified: "2025-07-03T12:00:00.000Z"},     // 1 day ago
     { id: 45, name: "homework.cpp", type: "file", folder: null, size: "3.4kb", modified: "2025-07-02T12:00:00.000Z" },      // 2 days ago
     { id: 46, name: "lab_work.java", type: "file", folder: null, size: "5.7kb", modified: "2025-07-01T12:00:00.000Z" },     // 3 days ago
     { id: 47, name: "exercise_1.py", type: "file", folder: null, size: "1.8kb", modified: "2025-07-04T09:00:00.000Z" },    // 3 hours ago

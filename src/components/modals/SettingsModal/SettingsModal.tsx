@@ -17,25 +17,25 @@ export const SettingsModal = () => {
           onClick={() => setActiveTab("profile")}
           className={`${styles.tabButton} ${activeTab === "profile" ? styles.isActive : ""}`}
         >
-          Общее
+          General
         </button>
         <button
           onClick={() => setActiveTab("editor")}
           className={`${styles.tabButton} ${activeTab === "editor" ? styles.isActive : ""}`}
         >
-          Редактор
+          Editor
         </button>
         <button
           onClick={() => setActiveTab("appearance")}
           className={`${styles.tabButton} ${activeTab === "appearance" ? styles.isActive : ""}`}
         >
-          Отображение
+          Appereance
         </button>
         <button
           onClick={() => setActiveTab("about")}
           className={`${styles.tabButton} ${activeTab === "about" ? styles.isActive : ""}`}
         >
-          О программе
+          About
         </button>
       </div>
 
@@ -52,9 +52,9 @@ export const SettingsModal = () => {
 
 const AppearanceTab = () => (
   <div>
-    <h3 className='text-lg font-medium mb-4'>Внешний вид</h3>
+    <h3 className='text-lg font-medium mb-4'>Appereance</h3>
     <div className='space-y-4'>
-      <p>Темная/светлая тема, акцентный цвет...</p>
+      <p>There will be some options..</p>
     </div>
   </div>
 )

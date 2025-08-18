@@ -8,9 +8,14 @@ import { useEffect, useRef, useState, useMemo } from "react"
 import { IoArrowBack } from "react-icons/io5"
 import { Item } from "@/components/ui/Item"
 import { useFileActions } from "@/hooks/useFileActions"
-import { type ItemProps, type FolderItem } from "@/types/fileSystem"
+import {
+  type ItemProps,
+  type FolderItem,
+  type FileItem
+} from "@/types/fileSystem"
 import { useFileFilter } from "@/hooks/useFileFilter"
 import { useFileStore } from "@/store/fileStore"
+import { useEditorState } from "@/store/editorStore"
 import { useMockData } from "@/hooks/useMockData"
 
 export const Filebar = () => {
@@ -40,6 +45,8 @@ export const Filebar = () => {
     getCurrentFolderName
   } = useFileNavigation(folders)
 
+  const { setFile } = useEditorState()
+
   // пермещение файлов отдельным хуков
   const { isDragMode, moveToTarget, cancelMove, isSelected } =
     useClickDragStore()
@@ -52,7 +59,14 @@ export const Filebar = () => {
       isDragMode ? moveToTarget(item.id) : goToFolder(item.id)
     } else if (!isDragMode) {
       // открытие файла
-      console.log("открытие файла")
+      let file: FileItem = {
+        id: item.id,
+        name: item.name,
+        type: item.type,
+        folder: item.folder || null,
+        language: item.language || "cpp"
+      }
+      setFile(file)
     }
   }
 

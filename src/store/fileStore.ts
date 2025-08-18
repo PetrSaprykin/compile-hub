@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import { type Item, type FileItem } from "@/types/fileSystem"
+import { type Item } from "@/types/fileSystem"
 
 interface FileStore {
   items: Item[]

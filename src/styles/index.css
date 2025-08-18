@@ -34,6 +34,14 @@ body {
   width: 100%;
 }
 
+/* code-mirror editor theme overrides */
+.cm-editor {
+  background: var(--bg-secondary);
+}
+.cm-gutters {
+  background-color: var(--bg-secondary) !important;
+}
+
 /* prettier-ignore */
 h1, h2, h3, h4,
 p, span, a, label {

@@ -30,3 +30,7 @@ export const VALIDATION_RULES = {
     SERVER_TIMEOUT: 5000 // максимальное время ожидания от сервер
   }
 } as const
+
+// export const APP_SETTINGS = {
+//   : "Python"
+// }

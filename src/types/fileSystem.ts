@@ -1,9 +1,9 @@
-export interface BaseItem {
-  id: number
-  name: string
-  size?: string
-  modified?: string
-}
+  export interface BaseItem {
+    id: number
+    name: string
+    size?: string
+    modified?: string
+  }
 
 export interface FileItem extends BaseItem {
   type: "file"
@@ -27,7 +27,7 @@ export interface ItemProps {
   fileListRef?: React.RefObject<HTMLDivElement>
   onClick?: () => void
 
-  // Drag & drop пропсы
+  // Drag & drop props
   isSelected?: boolean
   isDragMode?: boolean
   canDropHere?: boolean

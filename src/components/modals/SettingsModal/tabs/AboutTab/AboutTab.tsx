@@ -3,12 +3,12 @@ import styles from "./AboutTab.module.css"
 export const AboutTab = () => {
   return (
     <div className={styles.mainContainer}>
-      <h3>О программе</h3>
+      <h3>About us</h3>
       <p>
-        CompileHub - это простой и удобный способ компилировать ваш код прямо в
-        веб-браузере
+        CompileHub - it's a simple and easy way to compile your code using
+        web-browser (отредачить)
       </p>
-      <p>Список поддерживаемых языков:</p>
+      <p>Supported languages:</p>
       <ul>
         <li>Python</li>
         <li>Java</li>
@@ -16,7 +16,7 @@ export const AboutTab = () => {
         <li>JavaScript</li>
         <li>C++</li>
       </ul>
-      <p>Авторы: Пётр Сапрыкин, Егор Деев</p>
+      <p>Authors: Petr Saprykin, Egor Deev</p>
     </div>
   )
 }

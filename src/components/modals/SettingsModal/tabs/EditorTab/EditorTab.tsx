@@ -1,33 +1,25 @@
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { Switcher } from "@/components/ui/Switcher"
+import { useEditorSettings } from "@/store/editorStore"
 import styles from "./EditorTab.module.css"
-import { useState } from "react"
 
 export const EditorTab = () => {
-  const [fontSize, setFontSize] = useState<number>(14)
-  const MIN_FONT_SIZE = 8
-  const MAX_FONT_SIZE = 18
+  const MIN_FONT_SIZE = 12
+  const MAX_FONT_SIZE = 24
 
-  // Обработчик уменьшения
-  const handleDecrease = () => {
-    setFontSize((prev) => Math.max(MIN_FONT_SIZE, prev - 1))
-  }
-
-  // Обработчик увеличения
-  const handleIncrease = () => {
-    setFontSize((prev) => Math.min(MAX_FONT_SIZE, prev + 1))
-  }
+  const { fontSize, changeFontSize, autocomplete, switchAutocomplete } =
+    useEditorSettings()
 
   return (
     <div className={styles.mainContainer}>
-      <h3>Настройки редактора</h3>
+      <h3>Editor settings</h3>
       <div className={styles.optionContainer}>
-        <span>Размер шрифта</span>
+        <span>Font size</span>
         <div className={styles.fontSizeInput}>
           <Button
             variant='primary'
-            onClick={handleDecrease}
+            onClick={() => changeFontSize(fontSize - 1)}
             disabled={fontSize <= MIN_FONT_SIZE}
           >
             -
@@ -42,7 +34,7 @@ export const EditorTab = () => {
           />
           <Button
             variant='primary'
-            onClick={handleIncrease}
+            onClick={() => changeFontSize(fontSize + 1)}
             disabled={fontSize >= MAX_FONT_SIZE}
           >
             +
@@ -50,9 +42,11 @@ export const EditorTab = () => {
         </div>
       </div>
       <div className={styles.optionContainer}>
-        <span>Автодополнение</span>
-        {/* В пропс init value можно запихнуть настройку юзера и облачно синхронизировать*/}
-        <Switcher />
+        <span>Show snippets</span>
+        <Switcher
+          onChange={() => switchAutocomplete()}
+          initialValue={autocomplete}
+        />
       </div>
     </div>
   )

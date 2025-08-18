@@ -28,6 +28,7 @@
   width: 20px;
   height: 40px;
   background-color: var(--bg-secondary);
+  z-index: 1000;
   top: 41%;
   right: -19px;
   cursor: pointer;
