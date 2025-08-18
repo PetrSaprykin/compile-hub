@@ -10,21 +10,30 @@ import { Item } from "@/components/ui/Item"
 import { useFileActions } from "@/hooks/useFileActions"
 import { type ItemProps, type FolderItem } from "@/types/fileSystem"
 import { useFileFilter } from "@/hooks/useFileFilter"
-import { useFileStore } from "@/store/fileStore"
-import { useMockData } from "@/hooks/useMockData"
+import { useFileSystemStore } from "@/store/fileSystemStore"
+import { CgSpinner } from "react-icons/cg"
+import { useUserStore } from "@/store/userStore"
 
 export const Filebar = () => {
   const [isFilebarOpen, setFilebarOpen] = useState(true)
   const [searchText, setSearchText] = useState("")
   const fileListRef = useRef<HTMLDivElement>(null!)
 
-  const { itemsArray } = useMockData()
   // получение файлов отдельным хуком
-  const { items, setItems } = useFileStore()
+  const { currentUser } = useUserStore()
+  const { loadItems, items, isLoading } = useFileSystemStore()
+
+  // отладка
+  useEffect(
+    () => console.log(`Текущий пользователь: ${currentUser.username}`),
+    []
+  )
 
   useEffect(() => {
-    setItems(itemsArray)
-  }, [])
+    if (currentUser?.id && items.length === 0) {
+      loadItems(currentUser.id) // Загружаем, если файлов нет
+    }
+  }, [currentUser?.id, loadItems, items.length])
 
   const folders = useMemo(
     () => items.filter((item): item is FolderItem => item.type === "folder"),
@@ -41,22 +50,21 @@ export const Filebar = () => {
   } = useFileNavigation(folders)
 
   // пермещение файлов отдельным хуков
-  const { isDragMode, moveToTarget, cancelMove, isSelected } =
+  const { isDragMode, cancelMove, isSelected, selectedItem } =
     useClickDragStore()
 
-  const { handleCreate } = useFileActions()
+  const { handleCreate, handleMove } = useFileActions()
 
   // обработчик клика по папке
   const handleClick = (item: ItemProps) => {
     if (item.type === "folder") {
-      isDragMode ? moveToTarget(item.id) : goToFolder(item.id)
+      isDragMode ? handleMove(selectedItem, item.id) : goToFolder(item.id)
     } else if (!isDragMode) {
-      // открытие файла
       console.log("открытие файла")
     }
   }
 
-  const handleMoveToRoot = () => moveToTarget(null)
+  const handleMoveToRoot = () => handleMove(selectedItem, null)
 
   const handleBackClick = () => {
     goBack()
@@ -139,9 +147,11 @@ export const Filebar = () => {
             ))
           ) : (
             <span className={styles.searchError}>
-              {searchText
-                ? `File "${searchText}" not found`
-                : "Folder is empty"}
+              {currentUser.isGuest && items.length === 0
+                ? "You can click the buttons below to create your first file or folder"
+                : searchText
+                  ? `File "${searchText}" not found`
+                  : "This directory is empty"}
             </span>
           )}
         </div>
@@ -150,7 +160,10 @@ export const Filebar = () => {
 
         {/* Кнопки создания папки или файла, папку в папке создавать нельзя*/}
         <div className={styles.createingButtons}>
-          <Button variant='secondary' onClick={() => handleCreate("file")}>
+          <Button
+            variant='secondary'
+            onClick={() => handleCreate("file", currentFolder)}
+          >
             New file
           </Button>
           {currentFolder === null && (
@@ -172,6 +185,7 @@ export const Filebar = () => {
           <MdChevronRight size={30} />
         )}
       </button>
+      {isLoading && <CgSpinner className={styles.loadSpinner} size={35} />}
     </div>
   )
 }

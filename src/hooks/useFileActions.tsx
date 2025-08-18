@@ -1,21 +1,19 @@
 import { useCallback } from "react"
 import { useModalStore } from "@/store/modalStore"
-import { useFileStore } from "@/store/fileStore"
+import { useFileSystemStore } from "@/store/fileSystemStore"
 import { RenameModal } from "@/components/modals/RenameModal"
+import { ConfirmModal } from "@/components/modals/ConfirmModal"
 import { CreateItemModal } from "@/components/modals/CreateItemModal"
+import { ItemInfoModal } from "@/components/modals/ItemInfoModal"
 import { useClickDragStore } from "@/store/clickDragStore"
 import { type Item } from "@/types/fileSystem"
 
-interface FileActionsConfig {
-  showNotification?: (message: string, type: "success" | "error") => void
-}
-
 // show notification на будущий попап внизу справа
-export const useFileActions = (config: FileActionsConfig = {}) => {
-  const { showNotification } = config
-  const { selectForMove } = useClickDragStore()
+export const useFileActions = () => {
+  const { selectForMove, cancelMove } = useClickDragStore()
   const { openModal, closeModal } = useModalStore()
-  const { items, addItem, updateItem, deleteItem } = useFileStore()
+  const { items, addItem, updateItem, deleteItem, moveItem } =
+    useFileSystemStore()
 
   const handleRename = useCallback(
     async (item: Item) => {
@@ -35,70 +33,74 @@ export const useFileActions = (config: FileActionsConfig = {}) => {
         })
 
         if (newName && newName !== item.name) {
+          // Оптимистичное обновление интерфейса
           updateItem(item.id, { name: newName })
-          showNotification?.(
-            `"${item.name}" переименован в "${newName}"`,
-            "success"
-          )
+
+          // Запрос к серверу (заглушка)
+          // await FileService.renameFileOnServer(item.id, newName);
+
+          // тут показ уведомления можно
         }
       } catch (error) {
         console.error("Ошибка переименования:", error)
-        showNotification?.("Ошибка при переименовании", "error")
+        // тут показ уведомления можно
       }
     },
-    [openModal, closeModal, updateItem, showNotification]
+    [openModal, closeModal, updateItem]
   )
 
   const handleDelete = useCallback(
-    (item: Item) => {
-      const confirmed = confirm(
-        `Удалить ${item.type === "folder" ? "папку" : "файл"} "${item.name}"?`
-      )
-      if (!confirmed) return
+    async (item: Item) => {
+      let confirmed = false
+      try {
+        confirmed = await new Promise<boolean>((resolve) => {
+          openModal(
+            <ConfirmModal
+              type='warning'
+              title='Are you sure?'
+              message="You won't be able to restore this file"
+              onConfirm={() => resolve(true)}
+              onCancel={() => resolve(false)}
+            />
+          )
+        })
+      } finally {
+        closeModal()
+      }
 
-      deleteItem(item.id)
-      showNotification?.(`"${item.name}" удален`, "success")
-    },
-    [deleteItem, showNotification]
-  )
-
-  const handleDownload = useCallback(
-    (item: Item) => {
-      if (item.type !== "file") return
+      if (!confirmed) {
+        return
+      }
 
       try {
-        const link = document.createElement("a")
-        link.href = `#download-${item.id}` // TODO: заменить на реальный путь
-        link.download = item.name
-        link.click()
+        // Оптимистичное удаление
+        deleteItem(item.id)
 
-        showNotification?.(`Файл "${item.name}" скачан`, "success")
+        // тут показ уведомления можно
       } catch (error) {
-        console.error("Ошибка скачивания:", error)
-        showNotification?.("Ошибка при скачивании файла", "error")
+        console.error("Ошибка удаления:", error)
+        // тут показ уведомления можно
       }
     },
-    [showNotification]
+    [deleteItem]
   )
 
   const handleMove = useCallback(
-    (item: Item) => {
-      if (item.type === "file") {
-        console.log(`Перемещение элемента с id: ${item.id}`)
-        selectForMove({
-          id: item.id,
-          name: item.name,
-          type: item.type
-        })
+    async (item: Item | null, targetFolderId: number | null) => {
+      if (item && item.type === "file") {
+        console.log("kek")
+        // После выбора папки для перемещения (например, через модальное окно или drag-and-drop)
+        // вызываем:
+        // await FileService.moveFileOnServer(item.id, targetFolderId);
+        moveItem(item.id, targetFolderId)
+        cancelMove()
       }
     },
     [selectForMove]
   )
 
   const handleShowInfo = useCallback((item: Item) => {
-    alert(
-      `Информация о:\nИмя: ${item.name}\nТип: ${item.type}\nID: ${item.id}\nРазмер: ${item.size ?? "—"}\nИзменён: ${item.modified ?? "—"}`
-    )
+    openModal(<ItemInfoModal item={item} />)
   }, [])
 
   const handleCreate = useCallback(
@@ -138,19 +140,15 @@ export const useFileActions = (config: FileActionsConfig = {}) => {
 
         addItem(newItem)
 
-        showNotification?.(
-          `${type === "folder" ? "Папка" : "Файл"} "${name}" создан`,
-          "success"
-        )
+        // тут показ уведомления можно
       }
     },
-    [items, addItem, showNotification, openModal, closeModal]
+    [items, addItem, openModal, closeModal]
   )
 
   return {
     handleRename,
     handleDelete,
-    handleDownload,
     handleMove,
     handleShowInfo,
     handleCreate

@@ -30,3 +30,8 @@ export const VALIDATION_RULES = {
     SERVER_TIMEOUT: 5000 // максимальное время ожидания от сервер
   }
 } as const
+
+export const GUEST_LIMITS = {
+  MAX_FILES: 10,
+  MAX_FOLDERS: 3
+}

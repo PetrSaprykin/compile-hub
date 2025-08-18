@@ -33,6 +33,6 @@ export const routeConfig: RouteConfig[] = [
   {
     path: ROUTES.PASSWORD_RESET,
     element: <ResetPasswordPage />,
-    title: "Страница не найдена"
+    title: "Password reset"
   }
 ]

@@ -3,13 +3,39 @@ import CodeMirror from "@uiw/react-codemirror"
 import { javascript } from "@codemirror/lang-javascript"
 import { atomone } from "@uiw/codemirror-theme-atomone"
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels"
+import { useEditorStore } from "@/store/editorStore"
 import styles from "./Editor.module.css"
 
 export const Editor = () => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [editorHeight, setEditorHeight] = useState("100%")
-  const [output, setOutput] = useState<string[]>([])
-  const [code, setCode] = useState("console.log('Hello World!');")
+
+  const {
+    currentFile,
+    code,
+    isLoading,
+    isCompiling,
+    output,
+    inputRequired,
+    loadCode,
+    saveCode,
+    compileCode,
+    sendInput
+  } = useEditorStore()
+
+  useEffect(() => {
+    if (currentFile) {
+      loadCode(currentFile)
+    }
+  }, [currentFile, loadCode])
+
+  const handleCodeChange = (value: string) => {
+    saveCode(value)
+  }
+
+  if (isLoading) {
+    return <div className={styles.loading}>Loading code...</div>
+  }
 
   // авторесайз редактора
   useEffect(() => {
@@ -25,34 +51,6 @@ export const Editor = () => {
     return () => resizeObserver.disconnect()
   }, [])
 
-  // Функция выполнения кода (JS)
-  const executeCode = () => {
-    try {
-      const newOutput = []
-      // Сохраняем оригинальный console.log
-      const originalConsoleLog = console.log
-
-      // Перехватываем вывод
-      console.log = (...args) => {
-        newOutput.push(args.join(" "))
-        originalConsoleLog(...args)
-      }
-
-      newOutput.push(`> ${code}`) // Добавляем ввод
-
-      // Выполняем код
-      new Function(code)()
-
-      newOutput.push("Execution completed")
-      setOutput(newOutput)
-
-      // Восстанавливаем console.log
-      console.log = originalConsoleLog
-    } catch (error) {
-      setOutput([...output, `Error: ${error}`])
-    }
-  }
-
   return (
     <>
       <div ref={containerRef} className={styles.editorContainer}>
@@ -65,18 +63,41 @@ export const Editor = () => {
                 height={editorHeight}
                 extensions={[javascript()]}
                 theme={atomone}
-                onChange={(value) => setCode(value)}
+                onChange={handleCodeChange}
                 className={styles.editor}
               />
-              <button onClick={executeCode} className={styles.runButton}>
-                Run Code
+              <button
+                onClick={compileCode}
+                className={styles.runButton}
+                disabled={isCompiling && isLoading}
+              >
+                {isCompiling ? "Running..." : "Run Code"}
               </button>
             </div>
           </Panel>
           <PanelResizeHandle className={styles.resizeHandle} />
           {/* Консоль вывода */}
           <Panel minSize={20}>
-            <pre className={styles.consoleOutput}>{output.join("\n")}</pre>
+            <div className={styles.consoleContainer}>
+              <pre className={styles.consoleOutput}>
+                {output || "Output will appear here..."}
+              </pre>
+              {inputRequired && (
+                <div className={styles.inputContainer}>
+                  <input
+                    type='text'
+                    placeholder='Enter input...'
+                    className={styles.inputField}
+                  />
+                  <button
+                    onClick={() => sendInput("user input")}
+                    className={styles.sendButton}
+                  >
+                    Send
+                  </button>
+                </div>
+              )}
+            </div>
           </Panel>
         </PanelGroup>
       </div>

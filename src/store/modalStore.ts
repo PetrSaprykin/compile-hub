@@ -3,8 +3,8 @@ import { create } from "zustand"
 type ModalStore = {
   isOpen: boolean
   isLocked: boolean
-  content: React.ReactNode | null
-  openModal: (content: React.ReactNode) => void
+  content: React.ReactElement | null
+  openModal: (content: React.ReactElement) => void
   setIsLocked: (state: boolean) => void
   closeModal: () => void
 }

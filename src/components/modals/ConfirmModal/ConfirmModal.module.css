@@ -11,5 +11,9 @@
 
 p {
   font-size: var(--font-size-md);
-  text-align: center;
+}
+
+.buttons {
+  display: flex;
+  gap: var(--spacing-sm);
 }
