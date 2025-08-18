@@ -223,3 +223,21 @@ hr {
     padding: 3px var(--spacing-xs);
   }
 } */
+
+.loadSpinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  color: var(--primary);
+  animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,4 +1,6 @@
-// src/store/authStore.ts
+// ПЕРЕИМЕНОВАТЬ В authModalStore.ts
+// ВЕСЬ ФАЙЛ - ЭТО ВАЛИДАЦИЯ ОКНА АВТОРИЗАЦИИ, НЕ БОЛЕЕ
+
 import { create } from "zustand"
 import { createDebouncer } from "@/utils/debouncer"
 import { FormValidators } from "@/utils/validators"
@@ -21,7 +23,7 @@ interface AuthState {
   setPassword: (password: string) => void
   setConfirmPassword: (confirmPassword: string) => void
   resetForm: () => void
-  submitForm: (mode: string) => Promise<[string, boolean]>
+  // submitForm: (mode: string) => Promise<[string, boolean]>
   isValid: (mode: string) => boolean
 }
 
@@ -164,11 +166,12 @@ export const useAuthStore = create<AuthState>((set, get) => {
         }
       })
     },
-    submitForm: async (mode: string) => {
-      // mode будем передавать на сервер
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-      return ["You're successfully signed up", false] as [string, boolean] // заглушка
-    },
+    // submitForm: async (mode: string) => {
+    //   // mode будем передавать на сервер
+    //   await new Promise((resolve) => setTimeout(resolve, 1500))
+    //   return ["You're successfully signed up", false] as [string, boolean] // заглушка
+    // },
+
     isValid: (mode: string): boolean => {
       const state = get()
 

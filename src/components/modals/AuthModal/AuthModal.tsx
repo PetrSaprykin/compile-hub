@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/Input"
 import { Logo } from "@/components/ui/Logo"
 import { useAuthStore } from "@/store/authStore"
 import { useModalStore } from "@/store/modalStore"
+import { AuthService } from "@/services/authService"
 import { CgSpinner } from "react-icons/cg"
 import { MdLockOutline, MdMailOutline, MdPersonOutline } from "react-icons/md"
 
@@ -44,7 +45,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isReg = false }) => {
     setPassword,
     setConfirmPassword,
     resetForm,
-    submitForm,
+    // submitForm,
     isValid
   } = useAuthStore()
 
@@ -69,38 +70,45 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isReg = false }) => {
     setStatusMessage({ text: "", isSuccess: true })
 
     console.log(`Отправка формы ${mode}`)
+
     if (!isValid(mode)) return
 
     setIsLocked(true)
     setIsLoading(true)
     try {
-      const result = await submitForm(mode)
+      if (mode === "login") {
+        const result = await AuthService.login(username, password)
+        const [statusMessage, success]: [string, boolean] = result
 
-      const [statusMessage, success] = result
-
-      console.log(statusMessage, success)
-
-      if (success) {
-        if (mode === "register") {
+        if (success) {
           resetForm()
           setIsLoading(false)
-          setStatusMessage({ text: statusMessage, isSuccess: true })
+          setStatusMessage({ text: statusMessage, isSuccess: success })
         } else {
-          // setIsLoading(false) но скорее всего просто закрытие окна
-          console.log("Login successful")
+          setIsLoading(false)
+          setStatusMessage({
+            text: "Failed to login, please try again later",
+            isSuccess: success
+          })
         }
       } else {
-        if (mode === "register") {
+        const result = await AuthService.register({
+          username: username,
+          password: password,
+          email: email
+        })
+
+        const [statusMessage, success]: [string, boolean] = result
+
+        if (success) {
+          resetForm()
           setIsLoading(false)
-          setStatusMessage({
-            text: "Failed to  sign up, please  again later",
-            isSuccess: false
-          })
+          setStatusMessage({ text: statusMessage, isSuccess: success })
         } else {
           setIsLoading(false)
           setStatusMessage({
-            text: "Failed to log in, check your credentials",
-            isSuccess: false
+            text: statusMessage,
+            isSuccess: success
           })
         }
       }

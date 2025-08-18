@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { PiNotePencil } from "react-icons/pi"
 import styles from "./CreateItemModal.module.css"
-import { useFileStore } from "@/store/fileStore"
+import { useFileSystemStore } from "@/store/fileSystemStore"
 import { validateFilename, validateFoldername } from "@/utils/validators"
 
 interface CreateItemModalProps {
@@ -17,7 +17,7 @@ export const CreateItemModal: React.FC<CreateItemModalProps> = ({
   onConfirm,
   onCancel
 }) => {
-  const { items } = useFileStore()
+  const { items } = useFileSystemStore()
 
   const [message, setMessage] = useState<{
     isValid: boolean

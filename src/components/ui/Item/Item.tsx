@@ -16,6 +16,7 @@ import {
 } from "react-icons/md"
 
 import { Icons } from "@/utils/icons"
+import { useClickDragStore } from "@/store/clickDragStore"
 
 export const Item: React.FC<ItemProps> = ({
   id,
@@ -31,17 +32,9 @@ export const Item: React.FC<ItemProps> = ({
   isDragMode = false,
   canDropHere = false
 }) => {
-  const {
-    handleRename,
-    handleDelete,
-    handleDownload,
-    handleMove,
-    handleShowInfo
-  } = useFileActions({
-    showNotification: (message, type) => {
-      console.log(`${type.toUpperCase()}: ${message}`)
-    }
-  })
+  const { handleRename, handleDelete, handleShowInfo } = useFileActions()
+
+  const { selectForMove } = useClickDragStore()
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -100,14 +93,14 @@ export const Item: React.FC<ItemProps> = ({
           icon: <MdArrowForward />,
           onClick: () => {
             fileListRef?.current.scrollTo({ top: 0, behavior: "smooth" })
-            handleMove(currentItem)
+            selectForMove(currentItem)
           }
         },
         {
           id: "download",
           label: "Скачать",
           icon: <MdDownload />,
-          onClick: () => handleDownload(currentItem)
+          onClick: () => console.log("тут будет загрузка")
         }
       )
     }
@@ -143,7 +136,7 @@ export const Item: React.FC<ItemProps> = ({
     )
 
     return menuItems
-  } 
+  }
 
   const itemClasses: string = [
     styles.fileItem,

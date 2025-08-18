@@ -31,6 +31,11 @@ export const VALIDATION_RULES = {
   }
 } as const
 
+export const GUEST_LIMITS = {
+  MAX_FILES: 10,
+  MAX_FOLDERS: 3
+}
+
 // export const APP_SETTINGS = {
 //   : "Python"
 // }
