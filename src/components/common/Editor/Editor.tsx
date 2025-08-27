@@ -3,7 +3,7 @@ import CodeMirror from "@uiw/react-codemirror"
 import { javascript, javascriptLanguage } from "@codemirror/lang-javascript"
 import { python, pythonLanguage } from "@codemirror/lang-python"
 import { java, javaLanguage } from "@codemirror/lang-java"
-import { useAuthStore } from "@/store/authStore"
+import { useUserStore } from "@/store/userStore"
 import { go, goLanguage } from "@codemirror/lang-go"
 import { cpp, cppLanguage } from "@codemirror/lang-cpp"
 import { atomone } from "@uiw/codemirror-theme-atomone"
@@ -45,12 +45,14 @@ export const Editor = () => {
 
   const { fontSize, autocomplete } = useEditorSettings()
 
+  const username = useUserStore().currentUser.username
+
   if (!currentFile) {
     return (
       <>
         <div ref={containerRef} className={styles.helloMessage}>
           <h1>
-            Good morning, <span>Petr</span>
+            Good morning, <span>{username}</span>
           </h1>
           <p>
             Click the file to open it or create new one by clicking button in

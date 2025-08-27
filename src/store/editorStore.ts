@@ -24,7 +24,7 @@ interface editorSettings {
   switchAutocomplete: () => void
 }
 
-export const useEditorState = create<editorState>((set, get) => ({
+export const useEditorState = create<editorState>((set) => ({
   currentFile: null, // there should be the last file user worked with
   code: "",
   output: "",

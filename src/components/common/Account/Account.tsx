@@ -4,6 +4,7 @@ import { useModalStore } from "@/store/modalStore"
 import { HiOutlineUserCircle } from "react-icons/hi2"
 import { MdOutlineLogout, MdOutlineSettings } from "react-icons/md"
 import { SettingsModal } from "@/components/modals/SettingsModal"
+import { AuthService } from "@/services/authService"
 
 // MdInfoOutline иконка Info
 
@@ -20,7 +21,7 @@ export const Account = () => {
       id: "Logout",
       label: "Log Out",
       icon: <MdOutlineLogout />,
-      onClick: () => console.log("здесь будет логика выхода из приложения"),
+      onClick: () => AuthService.logout(),
       destructive: true
     }
   ]

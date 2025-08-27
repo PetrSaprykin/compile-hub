@@ -17,7 +17,6 @@ export const GeneralTab = () => {
         <div className={styles.profileInfo}>
           <span className={styles.name}>{currentUser?.username}</span>
           <span className={styles.id}>ID: {currentUser?.id}</span>
-          <span className={styles.registerDate}>Registered: 15.07.2025</span>
         </div>
       </div>
       <div className={styles.optionContainer}>
@@ -30,9 +29,9 @@ export const GeneralTab = () => {
         </div>
       </div>
       <div className={styles.optionContainer}>
-        <span>Выйти из аккаунта</span>
+        <span>Log out</span>
         <Button variant='danger' className={styles.logOutButton}>
-          Sign Out
+          Log out
         </Button>
       </div>
     </div>

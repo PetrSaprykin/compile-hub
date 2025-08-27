@@ -16,7 +16,6 @@ import {
 import { useFileFilter } from "@/hooks/useFileFilter"
 import { useFileSystemStore } from "@/store/fileSystemStore"
 import { useEditorState } from "@/store/editorStore"
-import { useMockData } from "@/hooks/useMockData"
 import { CgSpinner } from "react-icons/cg"
 import { useUserStore } from "@/store/userStore"
 
@@ -69,6 +68,7 @@ export const Filebar = () => {
       isDragMode ? handleMove(selectedItem, item.id) : goToFolder(item.id)
     } else if (!isDragMode) {
       console.log("открытие файла")
+      setFile(item as FileItem) // fix it
     }
   }
 

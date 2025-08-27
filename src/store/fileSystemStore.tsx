@@ -7,7 +7,7 @@ import { useModalStore } from "@/store/modalStore"
 import { ErrorModal } from "@/components/modals/ErrorModal"
 
 /*
-  JSX в этом файле испльзуется для передачи импортируемых комопнентов
+  tsX в этом файле испльзуется для передачи импортируемых комопнентов
   в openModal, например, openModal(<ErrorModal title='' message='' />) 
 */
 

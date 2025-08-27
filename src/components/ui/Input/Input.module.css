@@ -69,12 +69,14 @@
   color: var(--text-error);
   line-height: 1.25;
   font-size: 13px;
+  text-align: left;
 }
 
 .successNote {
   margin-left: 3px;
   font-size: var(--font-size-sm);
   color: var(--text-success);
+  text-align: left;
 }
 
 @keyframes spin {

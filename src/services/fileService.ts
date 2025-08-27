@@ -10,11 +10,15 @@ import { type Item } from "@/types/fileSystem"
 
 export const FileService = {
   async fetchUserFiles(userId: string): Promise<Item[]> {
-    const response = await fetch(`/api/files?userId=${userId}`)
+    const response = await fetch(`http://95.31.185.229:9999/api/files?userId=${userId}`)
     if (!response.ok) {
+      // тут сделать отображение ошибки
       throw new Error(`Failed to fetch files: ${response.status}`)
     }
-    return (await response.json()) as Item[]
+    const data = await response.json()
+    console.log(data)
+
+    return data as Item[]
   },
 
   async deleteFileOnServer(id: number): Promise<void> {

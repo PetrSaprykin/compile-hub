@@ -39,14 +39,6 @@
 }
 
 .profileInfo > .id {
-  margin-bottom: -10px;
-}
-.profileInfo > .registerDate {
-  margin-bottom: -2px;
-}
-
-.profileInfo > .id,
-.profileInfo > .registerDate {
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
 }

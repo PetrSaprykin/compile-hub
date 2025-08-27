@@ -4,7 +4,7 @@ import {
   type MenuItem
 } from "@/components/ui/DropdownMenu/DropdownMenu"
 import { useFileActions } from "@/hooks/useFileActions"
-import { type ItemProps, type Item as FileSystemItem } from "@/types/fileSystem" // путь проверь по своей структуре
+import { type ItemProps, type Item as FileSystemItem } from "@/types/fileSystem" 
 import styles from "./Item.module.css"
 import { timeAgo } from "@/utils/timeAgo"
 import {

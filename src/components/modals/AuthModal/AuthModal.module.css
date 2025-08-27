@@ -22,7 +22,7 @@
   align-items: center;
   margin-top: var(--spacing-md);
   gap: calc(var(--spacing-lg) - 12px);
-  height: 225px;
+  min-height: 225px;
 }
 
 .input {

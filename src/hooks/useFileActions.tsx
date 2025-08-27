@@ -6,12 +6,14 @@ import { ConfirmModal } from "@/components/modals/ConfirmModal"
 import { CreateItemModal } from "@/components/modals/CreateItemModal"
 import { ItemInfoModal } from "@/components/modals/ItemInfoModal"
 import { useClickDragStore } from "@/store/clickDragStore"
-import { type FileItem, type FolderItem, type Item } from "@/types/fileSystem"
+import { type FileItem, type Item } from "@/types/fileSystem"
+import { useEditorState } from "@/store/editorStore"
 
 // show notification на будущий попап внизу справа
 export const useFileActions = () => {
   const { selectForMove, cancelMove } = useClickDragStore()
   const { openModal, closeModal } = useModalStore()
+  const { setFile } = useEditorState()
   const { items, addItem, updateItem, deleteItem, moveItem } =
     useFileSystemStore()
 

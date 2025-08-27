@@ -32,17 +32,40 @@ export const useAuthStore = create<AuthState>((set, get) => {
     // проверка если юзер напечатал ещё символы во время проверки на сервере
     const currentUsername = get().username
 
+    set({ isValidating: true })
+
+    // заглушка запроса на сервер
+
     try {
-      set({ isValidating: true })
+      console.log("Отправлен запрос на проверку с юзернеймом " + currentUsername)
+      const response = await fetch(
+        `http://95.31.185.229:9999/api/auth/check-username?username=${username}`,
+        {
+          method: "GET", // Указываем метод
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      )
 
-      // заглушка запроса на сервер
-      const isFree = await new Promise<boolean>((resolve) => {
-        setTimeout(() => {
-          resolve(Math.random() > 0.3)
-        }, 1000)
-      })
+      const data = await response.json()
 
-      // вторая проверка после запроса на сервер
+      if (!response.ok || !data.available) {
+        set((state) => ({
+          ...state,
+          errors: {
+            ...state.errors,
+            username: {
+              isAvialable: false,
+              message: "HTTP error, try again later"
+            }
+          },
+          isValidating: false
+        }))
+      }
+
+      const isFree = data.available
+
       if (get().username !== currentUsername) return
 
       set((state) => ({
@@ -58,23 +81,15 @@ export const useAuthStore = create<AuthState>((set, get) => {
         },
         isValidating: false
       }))
-
-      //   await fetch(`запрос на сервер c username`)
-      //     .then(res => res.json())
-      //     .then(data => data.available);
-    } catch {
-      if (get().username !== username) return
-
-      set((state) => ({
-        ...state,
-        errors: {
-          ...state.errors,
-          username: { isAvialable: false, message: "Server error, please try again later" }
-        },
-        isValidating: false
-      }))
+    } catch (error) {
+      // Вывести сообщ об ошибке
     }
+
+    // вторая проверка после запроса на сервер
   }
+  //   await fetch(`запрос на сервер c username`)
+  //     .then(res => res.json())
+  //     .then(data => data.available);
 
   const debounceDelay = VALIDATION_RULES.TIMING.DEBOUNCE_DELAY
   const usernameDebouncer = createDebouncer(checkUsernameOnServer, debounceDelay)
